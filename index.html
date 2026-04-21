@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한국시장 매출 TOP100 신규 진입 분석</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #f5f7fa; color: #333; padding: 40px 20px; }
+.container { max-width: 1100px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 8px; color: #1a1a2e; }
+.subtitle { font-size: 0.85rem; color: #666; margin-bottom: 32px; line-height: 1.6; }
+.section { background: #fff; border-radius: 12px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.section h2 { font-size: 1.15rem; color: #1a1a2e; margin-bottom: 6px; }
+.section h3 { font-size: 0.95rem; color: #444; margin: 18px 0 10px; }
+.section .desc { font-size: 0.8rem; color: #888; margin-bottom: 16px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 12px; }
+th, td { padding: 8px 12px; text-align: center; border-bottom: 1px solid #eee; }
+th { background: #f8f9fb; font-weight: 600; color: #555; }
+tr:hover { background: #f8fbff; }
+td.left { text-align: left; }
+.highlight { background: #fff3cd !important; }
+.down { color: #dc3545; font-weight: 600; }
+.up { color: #28a745; font-weight: 600; }
+.neutral { color: #666; }
+.summary-box { background: #f0f4ff; border-left: 4px solid #4a6cf7; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; font-size: 0.85rem; line-height: 1.7; }
+.note { font-size: 0.75rem; color: #999; margin-top: 8px; }
+.divider { border: none; border-top: 2px solid #e8ecf2; margin: 36px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>한국시장 매출 TOP100 — 신규 진입 & 3개월 생존 분석</h1>
+<p class="subtitle">
+기준: <code>dw_app_monthly.in_revenue_top100_unified_os = true</code>, <code>country = 'KR'</code>, iOS+Android 합산<br>
+신규 진입 정의: 전체 기간(2022.01~2026.03) 중 최초 TOP100 진입월 (1월 제외, 재진입 미카운트)<br>
+3개월 생존: 진입월 + 3개월 시점에 TOP100 잔류 여부<br>
+매출: 연도별 환율(22:1,292 / 23:1,307 / 24:1,364 / 25:1,422 / 26:1,409) + 센서타워 100% 보정(÷0.7) 적용
+</p>
+
+<!-- ============================================================ -->
+<!-- PART 1: 물량 -->
+<!-- ============================================================ -->
+<div class="section">
+<h2>1. 신규 진입 물량</h2>
+<p class="desc">연도별 순수 신규 진입 수 (재진입 제외)</p>
+
+<h3>1-1. 전체</h3>
+<table>
+<tr><th>연도</th><th>월평균 신규진입 (11개월)</th><th>신규진입 (연도별 총합)</th><th>RPG 비중</th></tr>
+<tr><td>2022</td><td>8.5</td><td>94</td><td>63.8%</td></tr>
+<tr><td>2023</td><td>8.2</td><td>90</td><td>61.1%</td></tr>
+<tr><td>2024</td><td>7.5</td><td>83</td><td>63.9%</td></tr>
+<tr><td>2025</td><td>6.9</td><td>76</td><td>60.5%</td></tr>
+<tr><td>2026 1Q</td><td>6.5</td><td>13 (2개월)</td><td>61.5%</td></tr>
+</table>
+
+<div style="margin: 20px 0; display: flex; gap: 16px; flex-wrap: wrap;">
+<canvas id="chartEntry" width="380" height="220"></canvas>
+<canvas id="chartGenreAbs" width="380" height="220"></canvas>
+</div>
+<script>
+// 월평균 신규진입 선형 그래프
+(function(){
+const canvas = document.getElementById('chartEntry');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const pad = {top:30, right:30, bottom:40, left:50};
+const data = [{y:2022,v:8.5},{y:2023,v:8.2},{y:2024,v:7.5},{y:2025,v:6.9},{y:'26Q1',v:6.5}];
+const minV = 0, maxV = 10;
+const chartW = W - pad.left - pad.right;
+const chartH = H - pad.top - pad.bottom;
+
+function xPos(i){ return pad.left + (i/(data.length-1))*chartW; }
+function yPos(v){ return pad.top + chartH - ((v-minV)/(maxV-minV))*chartH; }
+
+ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+for(let v=0; v<=10; v+=2){
+    ctx.beginPath(); ctx.moveTo(pad.left, yPos(v)); ctx.lineTo(W-pad.right, yPos(v)); ctx.stroke();
+}
+ctx.fillStyle = '#999'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'right';
+for(let v=0; v<=10; v+=2){ ctx.fillText(v, pad.left-8, yPos(v)+4); }
+ctx.textAlign = 'center';
+data.forEach((d,i)=>{ ctx.fillText(d.y, xPos(i), H-pad.bottom+18); });
+
+ctx.beginPath(); ctx.strokeStyle = '#4a6cf7'; ctx.lineWidth = 2.5;
+data.forEach((d,i)=>{
+    if(i===0) ctx.moveTo(xPos(i), yPos(d.v));
+    else ctx.lineTo(xPos(i), yPos(d.v));
+});
+ctx.stroke();
+data.forEach((d,i)=>{
+    ctx.beginPath(); ctx.arc(xPos(i), yPos(d.v), 5, 0, Math.PI*2);
+    ctx.fillStyle = '#4a6cf7'; ctx.fill();
+    ctx.fillStyle = '#333'; ctx.font = 'bold 12px Segoe UI';
+    ctx.fillText(d.v, xPos(i), yPos(d.v)-12);
+});
+ctx.fillStyle = '#666'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'left';
+ctx.fillText('신규진입 수 (월평균)', pad.left, 16);
+})();
+
+// 장르별 가로 누적 막대 (절대값 기준, 안에 % 표시)
+(function(){
+const canvas = document.getElementById('chartGenreAbs');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const pad = {top:28, right:40, bottom:24, left:50};
+const chartW = W - pad.left - pad.right;
+const chartH = H - pad.top - pad.bottom;
+const years = ['2022','2023','2024','2025','26Q1'];
+const genres = [
+    {name:'RPG', data:[5.5,5.0,4.8,4.2,4.0], pct:[64,61,64,61,62], color:'#4a6cf7'},
+    {name:'Strategy', data:[0.9,1.5,0.5,1.0,1.0], pct:[11,18,6,14,15], color:'#fd7e14'},
+    {name:'기타장르', data:[2.2,1.7,2.3,1.7,1.5], pct:[26,21,30,25,23], color:'#adb5bd'}
+];
+const totals = [8.5,8.2,7.5,6.9,6.5];
+const maxV = 10;
+const barGroupH = chartH / years.length;
+const barH = barGroupH * 0.55;
+
+// x grid
+ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+for(let v=0; v<=maxV; v+=2){
+    const x = pad.left + (v/maxV)*chartW;
+    ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, H-pad.bottom); ctx.stroke();
+}
+ctx.fillStyle = '#999'; ctx.font = '10px Segoe UI'; ctx.textAlign = 'center';
+for(let v=0; v<=maxV; v+=2){
+    ctx.fillText(v, pad.left + (v/maxV)*chartW, pad.top-6);
+}
+
+// bars
+years.forEach((yr, i)=>{
+    const y = pad.top + i*barGroupH + (barGroupH-barH)/2;
+    let cumV = 0;
+    genres.forEach(g=>{
+        const v = g.data[i];
+        const bw = (v/maxV)*chartW;
+        const x = pad.left + (cumV/maxV)*chartW;
+        ctx.fillStyle = g.color;
+        ctx.fillRect(x, y, bw, barH);
+        if(bw > 22){
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Segoe UI'; ctx.textAlign = 'center';
+            ctx.fillText(g.pct[i]+'%', x+bw/2, y+barH/2+4);
+        }
+        cumV += v;
+    });
+    // total
+    const totalX = pad.left + (cumV/maxV)*chartW;
+    ctx.fillStyle = '#333'; ctx.font = 'bold 10px Segoe UI'; ctx.textAlign = 'left';
+    ctx.fillText(totals[i], totalX+4, y+barH/2+4);
+    // y label
+    ctx.fillStyle = '#666'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'right';
+    ctx.fillText(yr, pad.left-8, y+barH/2+4);
+});
+
+// legend
+ctx.font = '10px Segoe UI'; ctx.textAlign = 'left';
+let lx = pad.left;
+genres.forEach(g=>{
+    ctx.fillStyle = g.color;
+    ctx.fillRect(lx, H-10, 10, 10);
+    ctx.fillStyle = '#333';
+    ctx.fillText(g.name, lx+12, H-2);
+    lx += ctx.measureText(g.name).width + 24;
+});
+ctx.fillStyle = '#666'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'left';
+ctx.fillText('장르별 월평균 신규진입', pad.left, 14);
+})();
+</script>
+
+<p class="note">매년 감소 추세. RPG(-1.3)와 기타장르(-0.5) 모두 줄었으나 비중은 60~64%로 일정 — 특정 장르만의 문제가 아닌 전체적인 신규 공급 감소.</p>
+
+<h3>1-2. 퍼블리셔 그룹별 신규진입</h3>
+<style>
+.cell-split { line-height: 1.2; }
+.cell-split .pct { font-size: 0.9rem; font-weight: 600; }
+.cell-split .sub { font-size: 0.7rem; color: #888; }
+</style>
+<table>
+<tr><th>퍼블리셔</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>26 1Q</th><th>추이</th></tr>
+<tr><td>KR</td>
+<td class="cell-split"><span class="pct">44.7%</span><br><span class="sub">월 3.8개</span></td>
+<td class="cell-split"><span class="pct">40.0%</span><br><span class="sub">월 3.3개</span></td>
+<td class="cell-split"><span class="pct">31.3%</span><br><span class="sub">월 2.4개</span></td>
+<td class="cell-split"><span class="pct">35.5%</span><br><span class="sub">월 2.5개</span></td>
+<td class="cell-split"><span class="pct">30.8%</span><br><span class="sub">월 2.0개</span></td>
+<td class="down">감소</td></tr>
+<tr><td>중화권</td>
+<td class="cell-split"><span class="pct">40.4%</span><br><span class="sub">월 3.5개</span></td>
+<td class="cell-split"><span class="pct">51.1%</span><br><span class="sub">월 4.2개</span></td>
+<td class="cell-split"><span class="pct">54.2%</span><br><span class="sub">월 4.1개</span></td>
+<td class="cell-split"><span class="pct">43.4%</span><br><span class="sub">월 3.0개</span></td>
+<td class="cell-split"><span class="pct">53.8%</span><br><span class="sub">월 3.5개</span></td>
+<td class="neutral">23~24 피크 후 감소</td></tr>
+<tr><td>기타</td>
+<td class="cell-split"><span class="pct">6.4%</span><br><span class="sub">월 0.5개</span></td>
+<td class="cell-split"><span class="pct">5.6%</span><br><span class="sub">월 0.5개</span></td>
+<td class="cell-split"><span class="pct">9.6%</span><br><span class="sub">월 0.7개</span></td>
+<td class="cell-split"><span class="pct">17.1%</span><br><span class="sub">월 1.2개</span></td>
+<td class="cell-split"><span class="pct">15.4%</span><br><span class="sub">월 1.0개</span></td>
+<td class="up">유일 증가 (모수적음)</td></tr>
+<tr><td>JP</td>
+<td class="cell-split"><span class="pct">5.3%</span><br><span class="sub">월 0.5개</span></td>
+<td class="cell-split"><span class="pct">2.2%</span><br><span class="sub">월 0.2개</span></td>
+<td class="cell-split"><span class="pct">2.4%</span><br><span class="sub">월 0.2개</span></td>
+<td class="cell-split"><span class="pct">1.3%</span><br><span class="sub">월 0.1개</span></td>
+<td class="cell-split"><span class="pct">0%</span><br><span class="sub">-</span></td>
+<td class="neutral">(모수적음)</td></tr>
+<tr><td>북미</td>
+<td class="cell-split"><span class="pct">3.2%</span><br><span class="sub">월 0.3개</span></td>
+<td class="cell-split"><span class="pct">1.1%</span><br><span class="sub">월 0.1개</span></td>
+<td class="cell-split"><span class="pct">2.4%</span><br><span class="sub">월 0.2개</span></td>
+<td class="cell-split"><span class="pct">2.6%</span><br><span class="sub">월 0.2개</span></td>
+<td class="cell-split"><span class="pct">0%</span><br><span class="sub">-</span></td>
+<td class="neutral">(모수적음)</td></tr>
+<tr style="font-weight:600; border-top:2px solid #ddd;"><td>전체</td>
+<td class="cell-split"><span class="pct">100%</span><br><span class="sub">월 8.5개</span></td>
+<td class="cell-split"><span class="pct">100%</span><br><span class="sub">월 8.2개</span></td>
+<td class="cell-split"><span class="pct">100%</span><br><span class="sub">월 7.5개</span></td>
+<td class="cell-split"><span class="pct">100%</span><br><span class="sub">월 6.9개</span></td>
+<td class="cell-split"><span class="pct">100%</span><br><span class="sub">월 6.5개</span></td>
+<td class="down">감소</td></tr>
+</table>
+
+<div style="margin: 20px 0;">
+<canvas id="chartPub12" width="700" height="360" style="max-width:100%;"></canvas>
+</div>
+<script>
+(function(){
+const canvas = document.getElementById('chartPub12');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const pad = {top:30, right:100, bottom:40, left:50};
+const chartW = W - pad.left - pad.right;
+const chartH = H - pad.top - pad.bottom;
+const years = [2022,2023,2024,2025,'26Q1'];
+// KR과 중화권만 주요 라인, 나머지는 얇게
+const main = [
+    {name:'KR', data:[3.8,3.3,2.4,2.5,2.0], color:'#4a6cf7', thick:true},
+    {name:'중화권', data:[3.5,4.2,4.1,3.0,3.5], color:'#dc3545', thick:true}
+];
+const sub = [
+    {name:'기타', data:[0.5,0.5,0.7,1.2,1.0], color:'#28a745'},
+    {name:'JP', data:[0.5,0.2,0.2,0.1,0], color:'#fd7e14'},
+    {name:'북미', data:[0.3,0.1,0.2,0.2,0], color:'#6c757d'}
+];
+const total = {name:'전체', data:[8.5,8.2,7.5,6.9,6.5], color:'#000'};
+const allSeries = [...main, ...sub, total];
+const minV = 0, maxV = 10;
+
+function xPos(i){ return pad.left + (i/(years.length-1))*chartW; }
+function yPos(v){ return pad.top + chartH - ((v-minV)/(maxV-minV))*chartH; }
+
+// grid
+ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+for(let v=0; v<=10; v+=2){
+    ctx.beginPath(); ctx.moveTo(pad.left, yPos(v)); ctx.lineTo(W-pad.right, yPos(v)); ctx.stroke();
+}
+ctx.fillStyle = '#999'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'right';
+for(let v=0; v<=10; v+=2){ ctx.fillText(v, pad.left-8, yPos(v)+4); }
+ctx.textAlign = 'center'; ctx.fillStyle = '#666';
+years.forEach((y,i)=>{ ctx.fillText(y, xPos(i), H-pad.bottom+18); });
+
+// sub lines (thin, dashed)
+sub.forEach(s=>{
+    ctx.beginPath(); ctx.strokeStyle = s.color; ctx.lineWidth = 1.2;
+    ctx.setLineDash([4,3]);
+    s.data.forEach((v,i)=>{
+        if(i===0) ctx.moveTo(xPos(i), yPos(v));
+        else ctx.lineTo(xPos(i), yPos(v));
+    });
+    ctx.stroke(); ctx.setLineDash([]);
+    s.data.forEach((v,i)=>{
+        ctx.beginPath(); ctx.arc(xPos(i), yPos(v), 3, 0, Math.PI*2);
+        ctx.fillStyle = s.color; ctx.fill();
+    });
+});
+
+// total line (black, thick)
+ctx.beginPath(); ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5;
+total.data.forEach((v,i)=>{
+    if(i===0) ctx.moveTo(xPos(i), yPos(v));
+    else ctx.lineTo(xPos(i), yPos(v));
+});
+ctx.stroke();
+total.data.forEach((v,i)=>{
+    ctx.beginPath(); ctx.arc(xPos(i), yPos(v), 4, 0, Math.PI*2);
+    ctx.fillStyle = '#000'; ctx.fill();
+    ctx.fillStyle = '#000'; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'center';
+    ctx.fillText(v, xPos(i), yPos(v)-12);
+});
+
+// main lines (thick, solid)
+main.forEach(s=>{
+    ctx.beginPath(); ctx.strokeStyle = s.color; ctx.lineWidth = 3;
+    s.data.forEach((v,i)=>{
+        if(i===0) ctx.moveTo(xPos(i), yPos(v));
+        else ctx.lineTo(xPos(i), yPos(v));
+    });
+    ctx.stroke();
+    s.data.forEach((v,i)=>{
+        ctx.beginPath(); ctx.arc(xPos(i), yPos(v), 5, 0, Math.PI*2);
+        ctx.fillStyle = s.color; ctx.fill();
+        // value label
+        ctx.fillStyle = s.color; ctx.font = 'bold 12px Segoe UI'; ctx.textAlign = 'center';
+        ctx.fillText(s.data[i], xPos(i), yPos(v)-12);
+    });
+});
+
+// legend
+ctx.font = '11px Segoe UI'; ctx.textAlign = 'left';
+allSeries.forEach((s,i)=>{
+    const lx = W - pad.right + 12, ly = pad.top + 14 + i*24;
+    ctx.strokeStyle = s.color; ctx.lineWidth = s.thick ? 3 : 1.2;
+    if(!s.thick) ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(lx, ly-2); ctx.lineTo(lx+16, ly-2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#333'; ctx.font = '11px Segoe UI';
+    ctx.fillText(s.name, lx+20, ly+2);
+});
+
+// title
+ctx.fillStyle = '#666'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'left';
+ctx.fillText('퍼블리셔 그룹별 월평균 신규진입 (개/월)', pad.left, 16);
+
+// annotation arrows
+ctx.fillStyle = '#4a6cf7'; ctx.font = '10px Segoe UI'; ctx.textAlign = 'center';
+ctx.fillText('22→24 KR 감소', (xPos(0)+xPos(2))/2, yPos(3.1)+40);
+ctx.fillStyle = '#dc3545';
+ctx.fillText('24→25 중화권 감소', (xPos(2)+xPos(3))/2, yPos(3.5)+50);
+})();
+</script>
+
+<p class="note">
+<strong>22~24년:</strong> KR이 월3.8→2.4로 줄며 전체 감소를 주도. 중화권은 오히려 3.5→4.2→4.1로 증가·유지.<br>
+<strong>25~26 1Q:</strong> 중화권이 월3.0으로 하락 합류. KR은 2.5→2.0으로 계속 감소. 기타 그룹은 1.2→1.0 유지. (26 1Q는 2~3월 2개월 집계)
+</p>
+
+<h3>1-3. 퍼블리셔 그룹별 신규진입 장르 구성 변화</h3>
+
+<div style="margin: 20px 0; display: flex; gap: 12px; flex-wrap: wrap;">
+<canvas id="chartGenreKR" width="320" height="240"></canvas>
+<canvas id="chartGenreCN" width="320" height="240"></canvas>
+<canvas id="chartGenreEtc" width="320" height="240"></canvas>
+</div>
+<script>
+(function(){
+function drawStackedBar(canvasId, title, titleColor, years, genres, totals){
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const pad = {top:36, right:14, bottom:40, left:36};
+    const chartW = W - pad.left - pad.right;
+    const chartH = H - pad.top - pad.bottom;
+    const barGroupW = chartW / years.length;
+    const barW = barGroupW * 0.6;
+    const colorMap = {
+        'RPG':'#4a6cf7', 'Strategy':'#fd7e14', 'Simulation':'#3498db',
+        'Casual':'#9b59b6', 'Action':'#e74c3c', 'Puzzle':'#28a745',
+        '기타':'#adb5bd', '기타(시뮬,퍼즐)':'#adb5bd'
+    };
+    const colors = genres.map(g => colorMap[g.name] || '#adb5bd');
+
+    // y grid
+    const maxV = 4.5;
+    const step = 1;
+    ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+    for(let v=0; v<=maxV; v+=step){
+        const y = pad.top + chartH - (v/maxV)*chartH;
+        ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W-pad.right, y); ctx.stroke();
+    }
+    ctx.fillStyle = '#999'; ctx.font = '10px Segoe UI'; ctx.textAlign = 'right';
+    for(let v=0; v<=maxV; v+=step){
+        const y = pad.top + chartH - (v/maxV)*chartH;
+        ctx.fillText(v, pad.left-4, y+3);
+    }
+
+    // bars
+    years.forEach((yr, i)=>{
+        const x = pad.left + i*barGroupW + (barGroupW-barW)/2;
+        let cumV = 0;
+        genres.forEach((g,gi)=>{
+            const v = g.data[i];
+            if(v===0) { cumV+=v; return; }
+            const barH = (v/maxV)*chartH;
+            const y = pad.top + chartH - ((cumV+v)/maxV)*chartH;
+            ctx.fillStyle = colors[gi % colors.length];
+            ctx.fillRect(x, y, barW, barH);
+            if(barH > 12){
+                ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Segoe UI'; ctx.textAlign = 'center';
+                ctx.fillText(v, x+barW/2, y+barH/2+4);
+            }
+            cumV += v;
+        });
+        // total
+        ctx.fillStyle = '#333'; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'center';
+        ctx.fillText(totals[i], x+barW/2, pad.top + chartH - (totals[i]/maxV)*chartH - 6);
+        // x label
+        ctx.fillStyle = '#666'; ctx.font = '10px Segoe UI';
+        ctx.fillText(yr, x+barW/2, H-pad.bottom+14);
+    });
+
+    // title
+    ctx.fillStyle = titleColor; ctx.font = 'bold 12px Segoe UI'; ctx.textAlign = 'left';
+    ctx.fillText(title, pad.left, 14);
+
+    // legend (bottom)
+    ctx.font = '9px Segoe UI'; ctx.textAlign = 'left';
+    let lx = pad.left;
+    genres.forEach((g,gi)=>{
+        ctx.fillStyle = colors[gi % colors.length];
+        ctx.fillRect(lx, H-14, 8, 8);
+        ctx.fillStyle = '#555';
+        ctx.fillText(g.name, lx+10, H-7);
+        lx += ctx.measureText(g.name).width + 18;
+    });
+}
+
+// KR (÷11, 26Q1÷2)
+drawStackedBar('chartGenreKR', 'KR (월평균)', '#4a6cf7',
+    ['22','23','24','25','26Q1'],
+    [
+        {name:'RPG', data:[2.5,2.2,1.8,1.9,2.0]},
+        {name:'Strategy', data:[0.3,0.2,0,0.3,0]},
+        {name:'Simulation', data:[0.4,0.5,0.1,0.1,0]},
+        {name:'기타', data:[0.7,0.5,0.5,0.2,0]}
+    ],
+    [3.8,3.3,2.4,2.5,2.0]
+);
+
+// 중화권 (÷11, 26Q1÷2)
+drawStackedBar('chartGenreCN', '중화권 (월평균)', '#dc3545',
+    ['22','23','24','25','26Q1'],
+    [
+        {name:'RPG', data:[2.5,2.6,2.2,1.8,2.0]},
+        {name:'Strategy', data:[0.4,0.9,0.5,0.5,0.5]},
+        {name:'Casual', data:[0,0.3,0.3,0.3,0]},
+        {name:'Action', data:[0.2,0,0.5,0.2,0]},
+        {name:'Simulation', data:[0.2,0.2,0.1,0,0.5]},
+        {name:'Puzzle', data:[0,0.1,0.2,0.1,0.5]},
+        {name:'기타', data:[0.2,0.1,0.3,0.2,0]}
+    ],
+    [3.5,4.2,4.1,3.0,3.5]
+);
+
+// 기타 (÷11, 26Q1÷2)
+drawStackedBar('chartGenreEtc', '기타 (월평균)', '#28a745',
+    ['22','23','24','25','26Q1'],
+    [
+        {name:'RPG', data:[0.2,0.1,0.6,0.5,0]},
+        {name:'Strategy', data:[0.2,0.2,0,0.1,0.5]},
+        {name:'Puzzle', data:[0.2,0.1,0,0.1,0]},
+        {name:'Simulation', data:[0,0,0,0.1,0.5]},
+        {name:'Casual', data:[0,0,0,0.1,0]},
+        {name:'기타', data:[0,0.1,0.1,0.3,0]}
+    ],
+    [0.5,0.5,0.7,1.2,1.0]
+);
+})();
+</script>
+
+<details>
+<summary style="font-size:0.88rem; font-weight:600; color:#4a6cf7;">KR 퍼블리셔 장르 상세 (월평균)</summary>
+<table>
+<tr><th>장르</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>26Q1</th></tr>
+<tr><td>RPG</td><td>2.5</td><td>2.2</td><td>1.8</td><td>1.9</td><td>2.0</td></tr>
+<tr><td>Strategy</td><td>0.3</td><td>0.2</td><td>0</td><td>0.3</td><td>0</td></tr>
+<tr><td>Simulation</td><td>0.4</td><td>0.5</td><td>0.1</td><td>0.1</td><td>0</td></tr>
+<tr><td>기타(Adv/Sports/Action/Casino/Board/Puzzle)</td><td>0.7</td><td>0.5</td><td>0.5</td><td>0.2</td><td>0</td></tr>
+<tr style="font-weight:600;"><td>합계</td><td>3.8</td><td>3.3</td><td>2.4</td><td>2.5</td><td>2.0</td></tr>
+</table>
+<p class="note">RPG 외 전 장르가 감소. 비RPG가 1.3→0.6으로 반감하며 KR 전체 신작 공급 자체가 줄어듦.</p>
+</details>
+
+<details>
+<summary style="font-size:0.88rem; font-weight:600; color:#dc3545;">중화권 퍼블리셔 장르 상세 (월평균)</summary>
+<table>
+<tr><th>장르</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>26Q1</th></tr>
+<tr><td>RPG</td><td>2.5</td><td>2.6</td><td>2.2</td><td>1.8</td><td>2.0</td></tr>
+<tr><td>Strategy</td><td>0.4</td><td>0.9</td><td>0.5</td><td>0.5</td><td>0.5</td></tr>
+<tr><td>Casual</td><td>0</td><td>0.3</td><td>0.3</td><td>0.3</td><td>0</td></tr>
+<tr><td>Action</td><td>0.2</td><td>0</td><td>0.5</td><td>0.2</td><td>0</td></tr>
+<tr><td>Simulation</td><td>0.2</td><td>0.2</td><td>0.1</td><td>0</td><td>0.5</td></tr>
+<tr><td>Puzzle</td><td>0</td><td>0.1</td><td>0.2</td><td>0.1</td><td>0.5</td></tr>
+<tr><td>기타(Adv/Arcade/Music/Racing/Sports)</td><td>0.2</td><td>0.1</td><td>0.3</td><td>0.2</td><td>0</td></tr>
+<tr style="font-weight:600;"><td>합계</td><td>3.5</td><td>4.2</td><td>4.1</td><td>3.0</td><td>3.5</td></tr>
+</table>
+<p class="note">Strategy·Casual이 23년부터 꾸준히 유지. Action·Puzzle·Simulation 등 다양한 장르로 진입하며 비RPG 비중 확대 중.</p>
+</details>
+
+<details>
+<summary style="font-size:0.88rem; font-weight:600; color:#28a745;">기타 퍼블리셔 장르 상세 (월평균, 모수적음)</summary>
+<table>
+<tr><th>장르</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>26Q1</th></tr>
+<tr><td>RPG</td><td>0.2</td><td>0.1</td><td>0.6</td><td>0.5</td><td>0</td></tr>
+<tr><td>Strategy</td><td>0.2</td><td>0.2</td><td>0</td><td>0.1</td><td>0.5</td></tr>
+<tr><td>Puzzle</td><td>0.2</td><td>0.1</td><td>0</td><td>0.1</td><td>0</td></tr>
+<tr><td>Simulation</td><td>0</td><td>0</td><td>0</td><td>0.1</td><td>0.5</td></tr>
+<tr><td>Casual</td><td>0</td><td>0</td><td>0</td><td>0.1</td><td>0</td></tr>
+<tr><td>기타(Action/Adventure)</td><td>0</td><td>0.1</td><td>0.1</td><td>0.3</td><td>0</td></tr>
+<tr style="font-weight:600;"><td>합계</td><td>0.5</td><td>0.5</td><td>0.7</td><td>1.2</td><td>1.0</td></tr>
+</table>
+<p class="note">25년 진입 증가했으나 장르 불문 생존율 7.7%. (모수적음)</p>
+</details>
+
+<div class="summary-box" style="margin-top:16px;">
+<strong>장르 변화 요약:</strong><br><br>
+매출 TOP100 신규진입의 주력은 RPG(60%)였으며, 전체 장르가 줄면서 신규 진입 물량이 감소했다.<br><br>
+한국 퍼블리셔는 RPG 포함 전 장르가 줄어 감소 추세가 이어지고 있으며,<br>
+중화권은 RPG가 줄었지만 25년부터 비RPG(Casual, Puzzle, Simulation 등)가 이를 채우며 반등하는 흐름이다.
+</div>
+
+<h3>&lt;참고&gt; RPG 주요 신규진입 게임 (연도별 진입월 매출순)</h3>
+
+<details>
+<summary style="font-weight:600; color:#4a6cf7;">KR 퍼블리셔 RPG 리스트</summary>
+<div class="game-list">
+<strong>2026년 1Q (월2.0/2개월 총4):</strong> StoneAge: Idle Adventure 62억, 창세기전 키우기 5억, 에르피스 3억, 조선협객전 클래식<br><br>
+<strong>2025년 (월1.9/연간 총21):</strong> Seven Knights Re:BIRTH 339억, MapleStory Idle 155억, RF 온라인 넥스트 126억, 뱀피르 113억, 레전드 오브 이미르 84억, 아키텍트 77억, AION2 34억 외 14개<br><br>
+<strong>2024년 (월1.8/연간 총20):</strong> 로드나인 83억, Journey of Monarch 67억, ASTRA 47억, 뮤 모나크2 47억, 스타시드 42억, THE 라그나로크 32억, 호연 27억 외 13개<br><br>
+<strong>2023년 (월2.2/연간 총24):</strong> 씰M 35억, 아키에이지 워 29억, 뮤 모나크 29억, 트릭컬 리바이브 24억, 다크M 23억, 나이트 크로우 19억, Tower of God 16억 외 17개<br><br>
+<strong>2022년 (월2.5/연간 총27):</strong> 프리스톤테일M 64억, HIT2 36억, 미르M 32억, 드래곤라자 오리진 30억, 신의 탑M 22억, 세븐나이츠 레볼루션 18억, 더프레이 14억, 서머너즈 워:크로니클 12억 외 19개
+</div>
+</details>
+
+<details>
+<summary style="font-weight:600; color:#dc3545;">중화권 퍼블리셔 RPG 리스트</summary>
+<div class="game-list">
+<strong>2026년 1Q (월2.0/2개월 총4):</strong> DX:각성자들 19억, 미송자의 노래 12억, 우와 모험단 7억, 아케론 7억<br><br>
+<strong>2025년 (월1.8/연간 총20):</strong> 열혈강호:귀환 60억, 에테리아:리스타트 13억, 패스 오브 라이징 13억, Legends Reborn 13억, 갓깨비 키우기 12억, 냥냥 기사단 11억, 에그몬 월드 10억 외 13개<br><br>
+<strong>2024년 (월2.2/연간 총24):</strong> AFK Journey 144억, Zenless Zone Zero 87억, 소드 오브 콘발라리아 27억, 트리 오브 세이비어:네버랜드 22억, 바람의 드래군M 16억, 주술회전 15억, 노바삼국 15억 외 17개<br><br>
+<strong>2023년 (월2.6/연간 총29):</strong> 디스라이트 64억, 픽셀 히어로 52억, 버섯커 키우기 33억, Honkai: Star Rail 28억, 개판오분전 20억, 더블유:크로스월드 13억, 데스가르드 13억 외 22개<br><br>
+<strong>2022년 (월2.5/연간 총28):</strong> NIKKE 197억, 레오네 21억, 뉴럴 클라우드 20억, Valor Legends 15억, 테일즈 오브 판테온 14억, 타워 오브 판타지 14억, DC Worlds Collide 13억 외 21개
+</div>
+</details>
+
+<details>
+<summary style="font-weight:600; color:#28a745;">기타 퍼블리셔 RPG 리스트</summary>
+<div class="game-list">
+<strong>2025년 (월0.5/연간 총5):</strong> 스카이 나이츠 8억, 와다다 던전런 7억, Tiles Survive! 5억, 新月同行 3억, 왔더벅<br><br>
+<strong>2024년 (월0.6/연간 총7):</strong> Watcher of Realms 17억, Monster Never Cry 11억, RAID: Shadow Legends 9억, Immortal Adventure: Wukong 8억, 귀살대 6억, 히어로즈 군단 5억, 캣 판타지<br><br>
+<strong>2023년 (월0.1/연간 총1):</strong> Route: Red Earth Continent 12억<br><br>
+<strong>2022년 (월0.2/연간 총2):</strong> 원펀맨:영웅의 길 16억, 데몬헌터M 3억
+</div>
+</details>
+
+<h3>&lt;참고&gt; 25년 이후 RPG 이외 장르 리스트</h3>
+
+<details>
+<summary style="font-weight:600; color:#dc3545;">중화권 퍼블리셔 RPG 이외 장르 리스트</summary>
+
+<style>
+details { margin: 10px 0; }
+summary { cursor: pointer; font-weight: 600; font-size: 0.85rem; color: #444; padding: 6px 0; }
+summary:hover { color: #4a6cf7; }
+.game-list { font-size: 0.8rem; margin: 4px 0 12px 16px; line-height: 1.8; }
+.game-list .rev { color: #888; font-size: 0.75rem; }
+</style>
+
+<h4 style="font-size:0.85rem; margin:12px 0 8px;">2026년 1Q (월1.5/2개월 총3개)</h4>
+<table>
+<tr><th>장르</th><th>게임명</th><th>퍼블리셔</th><th>월평균 매출</th></tr>
+<tr><td>Simulation</td><td>Last Asylum: Plague</td><td>37GAMES</td><td>10.6억</td></tr>
+<tr><td>Strategy</td><td>심쿵 삼국지: 방치형 RPG</td><td>GameTree</td><td>7.3억</td></tr>
+<tr><td>Puzzle</td><td>Mystery Town: Merge Games</td><td>Cedar Games</td><td>6.5억</td></tr>
+</table>
+
+<h4 style="font-size:0.85rem; margin:12px 0 8px;">2025년 (월1.2/연간 총13개)</h4>
+<table>
+<tr><th>장르</th><th>게임명</th><th>퍼블리셔</th><th>월평균 매출</th></tr>
+<tr><td>Strategy</td><td>Kingshot</td><td>Century Games</td><td>53.7억</td></tr>
+<tr><td>Strategy</td><td>Dark War: Survival</td><td>Florere Game</td><td>26.3억</td></tr>
+<tr><td>Casual</td><td>Tasty Travels: Merge Game</td><td>Century Games</td><td>11.5억</td></tr>
+<tr><td>Strategy</td><td>Lands of Jail</td><td>JUST GAME</td><td>9.0억</td></tr>
+<tr><td>Casual</td><td>귀판오분전</td><td>Joy Net Games</td><td>8.9억</td></tr>
+<tr><td>Racing</td><td>레이싱 마스터</td><td>Exptional Global</td><td>7.9억</td></tr>
+<tr><td>Adventure</td><td>メカアサルト</td><td>ONEMT</td><td>7.8억</td></tr>
+<tr><td>Strategy</td><td>삼국지:전란</td><td>RASTAR GAMES</td><td>7.5억</td></tr>
+<tr><td>Strategy</td><td>Galaxy Defense: Fortress TD</td><td>CyberJoy Games</td><td>7.5억</td></tr>
+<tr><td>Casual</td><td>Wittle Defender</td><td>Habby</td><td>7.5억</td></tr>
+<tr><td>Puzzle</td><td>Flambé: Merge & Cook</td><td>Microfun</td><td>7.0억</td></tr>
+<tr><td>Action</td><td>Dynasty Legends 2: 무쌍전란</td><td>Taihe Interactive</td><td>5.4억</td></tr>
+<tr><td>Action</td><td>CoA-아틀란의 크리스탈</td><td>Nuverse Games</td><td>5.1억</td></tr>
+</table>
+
+<p class="note">25년 Strategy 5개, Casual 3개로 비RPG의 주력. 26 1Q도 Strategy·Puzzle·Simulation으로 다변화 지속.</p>
+</details>
+
+<details>
+<summary style="font-weight:600; color:#28a745;">기타 퍼블리셔 RPG 이외 장르 리스트</summary>
+
+<h4 style="font-size:0.85rem; margin:12px 0 8px;">2026년 1Q (월1.0/2개월 총2개)</h4>
+<table>
+<tr><th>장르</th><th>게임명</th><th>퍼블리셔</th><th>월평균 매출</th></tr>
+<tr><td>Card</td><td>Disney Solitaire</td><td>SuperPlay (Israel)</td><td>7.7억</td></tr>
+<tr><td>Strategy</td><td>Forge Master – Idle RPG</td><td>Lessmore (Germany)</td><td>7.6억</td></tr>
+</table>
+
+<h4 style="font-size:0.85rem; margin:12px 0 8px;">2025년 (월0.7/연간 총8개)</h4>
+<table>
+<tr><th>장르</th><th>게임명</th><th>퍼블리셔</th><th>월평균 매출</th></tr>
+<tr><td>Puzzle</td><td>Royal Kingdom</td><td>Dream Games</td><td>13.2억</td></tr>
+<tr><td>Strategy</td><td>정복의 바다: 해적 시뮬레이션</td><td>FunPlus</td><td>13.0억</td></tr>
+<tr><td>Casual</td><td>추억의 잡화점</td><td>Pogo Hopper</td><td>10.3억</td></tr>
+<tr><td>Action</td><td>귀신의 검객: 집결</td><td>Protinidhi Bazar</td><td>9.8억</td></tr>
+<tr><td>Adventure</td><td>귀멸의 혼: 라이즈</td><td>Shanghai Yadian</td><td>9.1억</td></tr>
+<tr><td>Simulation</td><td>인생존망겜</td><td>Frontier Games</td><td>8.8억</td></tr>
+<tr><td>Action</td><td>Duet Night Abyss</td><td>Spiral Rising</td><td>8.0억</td></tr>
+<tr><td>Adventure</td><td>악마 사냥꾼의 각성</td><td>ROSBERCOL</td><td>6.1억</td></tr>
+</table>
+
+<p class="note">기타 그룹은 다양한 국가(이스라엘, 터키, 독일 등)의 글로벌 스튜디오. 장르도 다양하나 생존율 7.7%로 대부분 단기 이탈.</p>
+</details>
+</div>
+
+<hr class="divider">
+
+<!-- ============================================================ -->
+<!-- PART 2: 성적 (3개월 생존율) -->
+<!-- ============================================================ -->
+<div class="section">
+<h2>2. 신규진입 3개월 생존율</h2>
+<p class="desc">신규 진입 후 3개월 시점에 TOP100 잔류 비율</p>
+
+<h3>2-1. 전체</h3>
+<table>
+<tr><th>연도</th><th>생존율</th><th style="font-size:0.75rem; color:#888;">생존/진입(연도별 총합)</th></tr>
+<tr><td>2022</td><td><strong>44.7%</strong></td><td style="font-size:0.8rem; color:#888;">42/94</td></tr>
+<tr><td>2023</td><td><strong>48.9%</strong></td><td style="font-size:0.8rem; color:#888;">44/90</td></tr>
+<tr><td>2024</td><td><strong>48.2%</strong></td><td style="font-size:0.8rem; color:#888;">40/83</td></tr>
+<tr class="highlight"><td>2025</td><td class="down"><strong>36.8%</strong></td><td style="font-size:0.8rem; color:#888;">28/76</td></tr>
+</table>
+
+<div style="margin: 20px 0;">
+<canvas id="chartSurv" width="500" height="220" style="max-width:100%;"></canvas>
+</div>
+<script>
+(function(){
+const canvas = document.getElementById('chartSurv');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const pad = {top:30, right:40, bottom:40, left:50};
+const chartW = W - pad.left - pad.right;
+const chartH = H - pad.top - pad.bottom;
+const data = [{y:2022,v:44.7},{y:2023,v:48.9},{y:2024,v:48.2},{y:2025,v:36.8}];
+const minV = 0, maxV = 100;
+
+function xPos(i){ return pad.left + (i/(data.length-1))*chartW; }
+function yPos(v){ return pad.top + chartH - ((v-minV)/(maxV-minV))*chartH; }
+
+// grid
+ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+for(let v=0; v<=100; v+=25){
+    ctx.beginPath(); ctx.moveTo(pad.left, yPos(v)); ctx.lineTo(W-pad.right, yPos(v)); ctx.stroke();
+}
+ctx.fillStyle = '#999'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'right';
+for(let v=0; v<=100; v+=25){ ctx.fillText(v+'%', pad.left-8, yPos(v)+4); }
+ctx.textAlign = 'center';
+data.forEach((d,i)=>{ ctx.fillText(d.y, xPos(i), H-pad.bottom+18); });
+
+// line
+ctx.beginPath(); ctx.strokeStyle = '#e85d04'; ctx.lineWidth = 2.5;
+data.forEach((d,i)=>{
+    if(i===0) ctx.moveTo(xPos(i), yPos(d.v));
+    else ctx.lineTo(xPos(i), yPos(d.v));
+});
+ctx.stroke();
+
+// dots + values
+data.forEach((d,i)=>{
+    ctx.beginPath(); ctx.arc(xPos(i), yPos(d.v), 5, 0, Math.PI*2);
+    ctx.fillStyle = '#e85d04'; ctx.fill();
+    ctx.fillStyle = '#333'; ctx.font = 'bold 12px Segoe UI';
+    ctx.fillText(d.v+'%', xPos(i), yPos(d.v)-12);
+});
+
+ctx.fillStyle = '#666'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'left';
+ctx.fillText('3개월 생존율 (전체)', pad.left, 16);
+})();
+</script>
+
+<p class="note">22~24년 45~49% 안정 → 25년 36.8%로 급락 (△-11.4%p)</p>
+
+<h3>2-2. 퍼블리셔 그룹별</h3>
+<table>
+<tr><th>퍼블리셔</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>추이</th></tr>
+<tr><td>KR</td>
+<td class="cell-split"><span class="pct">35.7%</span><br><span class="sub">15/42</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">18/36</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">13/26</span></td>
+<td class="cell-split"><span class="pct">48.1%</span><br><span class="sub">13/27</span></td>
+<td class="up">22년 이후 안정</td></tr>
+<tr class="highlight"><td>중화권</td>
+<td class="cell-split"><span class="pct">55.3%</span><br><span class="sub">21/38</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">23/46</span></td>
+<td class="cell-split"><span class="pct">53.3%</span><br><span class="sub">24/45</span></td>
+<td class="cell-split"><span class="pct down">39.4%</span><br><span class="sub">13/33</span></td>
+<td class="down">25년 하락</td></tr>
+<tr class="highlight"><td>기타</td>
+<td class="cell-split"><span class="pct">33.3%</span><br><span class="sub">2/6</span></td>
+<td class="cell-split"><span class="pct">40.0%</span><br><span class="sub">2/5</span></td>
+<td class="cell-split"><span class="pct">25.0%</span><br><span class="sub">2/8</span></td>
+<td class="cell-split"><span class="pct down">7.7%</span><br><span class="sub">1/13</span></td>
+<td class="neutral">(모수적음)</td></tr>
+<tr><td>JP</td>
+<td class="cell-split"><span class="pct">40.0%</span><br><span class="sub">2/5</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">1/2</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">1/2</span></td>
+<td class="cell-split"><span class="pct">100%</span><br><span class="sub">1/1</span></td>
+<td class="neutral">(모수적음)</td></tr>
+<tr><td>북미</td>
+<td class="cell-split"><span class="pct">66.7%</span><br><span class="sub">2/3</span></td>
+<td class="cell-split"><span class="pct">0.0%</span><br><span class="sub">0/1</span></td>
+<td class="cell-split"><span class="pct">0.0%</span><br><span class="sub">0/2</span></td>
+<td class="cell-split"><span class="pct">0.0%</span><br><span class="sub">0/2</span></td>
+<td class="neutral">(모수적음)</td></tr>
+<tr style="font-weight:600; border-top:2px solid #ddd;"><td>전체</td>
+<td class="cell-split"><span class="pct">44.7%</span><br><span class="sub">42/94</span></td>
+<td class="cell-split"><span class="pct">48.9%</span><br><span class="sub">44/90</span></td>
+<td class="cell-split"><span class="pct">48.2%</span><br><span class="sub">40/83</span></td>
+<td class="cell-split"><span class="pct down">36.8%</span><br><span class="sub">28/76</span></td>
+<td class="down">25년 하락</td></tr>
+</table>
+
+<div style="margin: 20px 0;">
+<canvas id="chartSurvPub" width="600" height="240" style="max-width:100%;"></canvas>
+</div>
+<script>
+(function(){
+const canvas = document.getElementById('chartSurvPub');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const pad = {top:30, right:100, bottom:40, left:50};
+const chartW = W - pad.left - pad.right;
+const chartH = H - pad.top - pad.bottom;
+const years = [2022,2023,2024,2025];
+const series = [
+    {name:'KR', data:[35.7,50.0,50.0,48.1], color:'#4a6cf7'},
+    {name:'중화권', data:[55.3,50.0,53.3,39.4], color:'#dc3545'},
+    {name:'기타', data:[33.3,40.0,25.0,7.7], color:'#28a745'}
+];
+const minV = 0, maxV = 60;
+
+function xPos(i){ return pad.left + (i/(years.length-1))*chartW; }
+function yPos(v){ return pad.top + chartH - ((v-minV)/(maxV-minV))*chartH; }
+
+ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+for(let v=0; v<=60; v+=20){
+    ctx.beginPath(); ctx.moveTo(pad.left, yPos(v)); ctx.lineTo(W-pad.right, yPos(v)); ctx.stroke();
+}
+ctx.fillStyle = '#999'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'right';
+for(let v=0; v<=60; v+=20){ ctx.fillText(v+'%', pad.left-8, yPos(v)+4); }
+ctx.textAlign = 'center';
+years.forEach((y,i)=>{ ctx.fillText(y, xPos(i), H-pad.bottom+18); });
+
+series.forEach(s=>{
+    ctx.beginPath(); ctx.strokeStyle = s.color; ctx.lineWidth = 2.2;
+    s.data.forEach((v,i)=>{
+        if(i===0) ctx.moveTo(xPos(i), yPos(v));
+        else ctx.lineTo(xPos(i), yPos(v));
+    });
+    ctx.stroke();
+    s.data.forEach((v,i)=>{
+        ctx.beginPath(); ctx.arc(xPos(i), yPos(v), 4, 0, Math.PI*2);
+        ctx.fillStyle = s.color; ctx.fill();
+    });
+    // end value
+    const lastV = s.data[3];
+    ctx.fillStyle = s.color; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'left';
+    ctx.fillText(lastV+'%', xPos(3)+8, yPos(lastV)+4);
+});
+
+// legend
+ctx.font = '11px Segoe UI'; ctx.textAlign = 'left';
+series.forEach((s,i)=>{
+    const lx = W - pad.right + 10, ly = pad.top + 14 + i*22;
+    ctx.fillStyle = s.color;
+    ctx.fillRect(lx, ly-8, 14, 3);
+    ctx.fillStyle = '#333';
+    ctx.fillText(s.name, lx+18, ly-2);
+});
+
+ctx.fillStyle = '#666'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'left';
+ctx.fillText('3개월 생존율 — 퍼블리셔 그룹별', pad.left, 16);
+})();
+</script>
+
+<h3>2-3. 중화권 퍼블리셔 내 장르별 3개월 생존율</h3>
+<table>
+<tr><th>장르</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>추이</th></tr>
+<tr class="highlight"><td>RPG</td>
+<td class="cell-split"><span class="pct">57.1%</span><br><span class="sub">16/28</span></td>
+<td class="cell-split"><span class="pct">48.3%</span><br><span class="sub">14/29</span></td>
+<td class="cell-split"><span class="pct">45.8%</span><br><span class="sub">11/24</span></td>
+<td class="cell-split"><span class="pct down">30.0%</span><br><span class="sub">6/20</span></td>
+<td class="down">57%→30% 꾸준히 하락</td></tr>
+<tr><td>Strategy, Casual</td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">2/4</span></td>
+<td class="cell-split"><span class="pct">53.8%</span><br><span class="sub">7/13</span></td>
+<td class="cell-split"><span class="pct">62.5%</span><br><span class="sub">5/8</span></td>
+<td class="cell-split"><span class="pct">62.5%</span><br><span class="sub">5/8</span></td>
+<td class="up">안정·양호</td></tr>
+<tr style="font-weight:600; border-top:2px solid #ddd;"><td>전체 (중화권)</td>
+<td class="cell-split"><span class="pct">55.3%</span><br><span class="sub">21/38</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">23/46</span></td>
+<td class="cell-split"><span class="pct">53.3%</span><br><span class="sub">24/45</span></td>
+<td class="cell-split"><span class="pct down">39.4%</span><br><span class="sub">13/33</span></td>
+<td class="down">25년 하락</td></tr>
+</table>
+<div style="margin: 20px 0;">
+<canvas id="chartSurvCN" width="700" height="240" style="max-width:100%;"></canvas>
+</div>
+<script>
+(function(){
+const canvas = document.getElementById('chartSurvCN');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const pad = {top:30, right:180, bottom:40, left:50};
+const chartW = W - pad.left - pad.right;
+const chartH = H - pad.top - pad.bottom;
+const years = [2022,2023,2024,2025];
+const series = [
+    {name:'RPG', data:[57.1,48.3,45.8,30.0], color:'#dc3545', thick:true},
+    {name:'비RPG (Strategy,Casual)', data:[50.0,53.8,62.5,62.5], color:'#28a745', thick:true}
+];
+const minV = 0, maxV = 80;
+function xPos(i){ return pad.left + (i/(years.length-1))*chartW; }
+function yPos(v){ return pad.top + chartH - ((v-minV)/(maxV-minV))*chartH; }
+
+ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+for(let v=0; v<=80; v+=20){
+    ctx.beginPath(); ctx.moveTo(pad.left, yPos(v)); ctx.lineTo(W-pad.right, yPos(v)); ctx.stroke();
+}
+ctx.fillStyle = '#999'; ctx.font = '10px Segoe UI'; ctx.textAlign = 'right';
+for(let v=0; v<=80; v+=20){ ctx.fillText(v+'%', pad.left-6, yPos(v)+4); }
+ctx.textAlign = 'center'; ctx.fillStyle = '#666';
+years.forEach((y,i)=>{ ctx.fillText(y, xPos(i), H-pad.bottom+16); });
+
+series.forEach(s=>{
+    ctx.beginPath(); ctx.strokeStyle = s.color;
+    ctx.lineWidth = s.thick ? 2.5 : 1.2;
+    s.data.forEach((v,i)=>{
+        if(i===0) ctx.moveTo(xPos(i), yPos(v));
+        else ctx.lineTo(xPos(i), yPos(v));
+    });
+    ctx.stroke();
+    s.data.forEach((v,i)=>{
+        ctx.beginPath(); ctx.arc(xPos(i), yPos(v), 4, 0, Math.PI*2);
+        ctx.fillStyle = s.color; ctx.fill();
+    });
+    const lastV = s.data[3];
+    ctx.fillStyle = s.color; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'left';
+    ctx.fillText(lastV+'%', xPos(3)+8, yPos(lastV)+4);
+});
+
+ctx.font = '10px Segoe UI'; ctx.textAlign = 'left';
+series.forEach((s,i)=>{
+    const lx = W - pad.right + 10, ly = pad.top + 10 + i*22;
+    ctx.strokeStyle = s.color; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx+14, ly); ctx.stroke();
+    ctx.fillStyle = '#333';
+    ctx.fillText(s.name, lx+18, ly+4);
+});
+ctx.fillStyle = '#666'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'left';
+ctx.fillText('중화권 장르별 3개월 생존율', pad.left, 16);
+})();
+</script>
+<p class="note">중화권 생존율 하락의 핵심 = RPG 장르 (57%→30%). Strategy는 60%로 변함없음.</p>
+
+<div class="summary-box" style="margin-top:16px;">
+<strong>생존율 핵심 요약:</strong><br><br>
+한국 퍼블리셔의 생존율은 23년 이후 48~50%로 안정적으로 유지되고 있으나, 중화권 퍼블리셔의 생존율이 25년 39.4%로 하락했다. 이는 중화권 RPG 장르의 생존율(57%→30%)이 끌어내린 것이며, 비RPG(Strategy·Casual)는 60% 이상으로 양호하게 유지되고 있다.
+</div>
+
+<h3>2-4. 한국 퍼블리셔 내 장르별 3개월 생존율</h3>
+<table>
+<tr><th>장르</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>추이</th></tr>
+<tr><td>RPG-MMORPG</td>
+<td class="cell-split"><span class="pct">87.5%</span><br><span class="sub">7/8</span></td>
+<td class="cell-split"><span class="pct">83.3%</span><br><span class="sub">10/12</span></td>
+<td class="cell-split"><span class="pct">66.7%</span><br><span class="sub">10/15</span></td>
+<td class="cell-split"><span class="pct">70.0%</span><br><span class="sub">7/10</span></td>
+<td class="neutral">22년 대비 하락, 양호</td></tr>
+<tr><td>RPG-비MMORPG</td>
+<td class="cell-split"><span class="pct">25.0%</span><br><span class="sub">1/4</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">3/6</span></td>
+<td class="cell-split"><span class="pct">0.0%</span><br><span class="sub">0/4</span></td>
+<td class="cell-split"><span class="pct">62.5%</span><br><span class="sub">5/8</span></td>
+<td class="neutral">변동 (모수적음)</td></tr>
+<tr><td>RPG-미분류</td>
+<td class="cell-split"><span class="pct">13.3%</span><br><span class="sub">2/15</span></td>
+<td class="cell-split"><span class="pct">0.0%</span><br><span class="sub">0/6</span></td>
+<td class="cell-split"><span class="pct">0.0%</span><br><span class="sub">0/1</span></td>
+<td class="cell-split"><span class="pct">0.0%</span><br><span class="sub">0/3</span></td>
+<td class="neutral">일관 낮음(소규모)</td></tr>
+<tr><td>Strategy, Puzzle, Casual 등</td>
+<td class="cell-split"><span class="pct">33.3%</span><br><span class="sub">5/15</span></td>
+<td class="cell-split"><span class="pct">41.7%</span><br><span class="sub">5/12</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">3/6</span></td>
+<td class="cell-split"><span class="pct">16.7%</span><br><span class="sub">1/6</span></td>
+<td class="neutral">변동 (모수적음)</td></tr>
+<tr style="font-weight:600; border-top:2px solid #ddd;"><td>전체 (한국 퍼블리셔)</td>
+<td class="cell-split"><span class="pct">35.7%</span><br><span class="sub">15/42</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">18/36</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">13/26</span></td>
+<td class="cell-split"><span class="pct">48.1%</span><br><span class="sub">13/27</span></td>
+<td class="up">22년 이후 안정</td></tr>
+</table>
+
+<div class="summary-box" style="margin-top:16px;">
+<strong>22년 전체 생존율(35.7%)이 유독 낮았던 이유:</strong> RPG-미분류가 15개나 진입했으나 생존은 2개뿐(13.3%). 뮤오리진2, 열혈강호W, 트리 오브 세이비어M, 라그나로크 아레나 등 기존 IP 모바일 리메이크·확장작이 대거 진입했다가 3개월 내 이탈한 해. 23년부터 이런 소규모 진입이 줄면서(15→6→1→3) 전체 생존율이 50% 수준으로 정상화됨.
+</div>
+
+<h3>2-5. 한국 퍼블리셔 신규진입 게임 상세 (장르별, 3개월 생존 여부)</h3>
+<p class="desc">○ 생존 / × 이탈</p>
+
+<details>
+<summary style="font-weight:600; color:#4a6cf7;">RPG-MMORPG — 생존율 70~88%</summary>
+<table>
+<tr><th>연도</th><th>게임명 (퍼블리셔)</th><th>3개월 생존여부</th></tr>
+<tr><td rowspan="8">2022</td><td>프리스톤테일M (FOW Games)</td><td>○</td></tr>
+<tr><td>HIT2 (NEXON)</td><td>○</td></tr>
+<tr><td>미르M (Wemade)</td><td>○</td></tr>
+<tr><td>드래곤라자 오리진 (빌리온게임즈)</td><td>○</td></tr>
+<tr><td>세븐나이츠 레볼루션 (Netmarble)</td><td>○</td></tr>
+<tr><td>천상비M (Sesisoft)</td><td>○</td></tr>
+<tr><td>트라하 인피니티 (MOAIGAMES)</td><td>○</td></tr>
+<tr><td style="color:#dc3545;">서머너즈 워: 크로니클 (Com2uS)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td rowspan="12">2023</td><td>씰M (PlaywithKorea)</td><td>○</td></tr>
+<tr><td>아키에이지 워 (Kakao Games)</td><td>○</td></tr>
+<tr><td>뮤 모나크 (Webzen)</td><td>○</td></tr>
+<tr><td>다크M (Xsoga Game)</td><td>○</td></tr>
+<tr><td>나이트 크로우 (Wemade)</td><td>○</td></tr>
+<tr><td>아카디아M (Sugarfun Game)</td><td>○</td></tr>
+<tr><td>Call of Chaos (DRAGONFLY GF)</td><td>○</td></tr>
+<tr><td>아레스 (Kakao Games)</td><td>○</td></tr>
+<tr><td>제노니아 (Com2uS)</td><td>○</td></tr>
+<tr><td>프라시아 전기 (NEXON)</td><td>○</td></tr>
+<tr><td style="color:#dc3545;">달빛조각사:다크게이머 (XLGAMES)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">빌딩앤파이터 (NEXON)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td rowspan="15">2024</td><td>로드나인 (Smilegate)</td><td>○</td></tr>
+<tr><td>Journey of Monarch (NC)</td><td>○</td></tr>
+<tr><td>뮤 모나크2 (Webzen)</td><td>○</td></tr>
+<tr><td>THE 라그나로크 (GRAVITY)</td><td>○</td></tr>
+<tr><td>ROM (Kakao Games)</td><td>○</td></tr>
+<tr><td>RAVEN2 (Netmarble)</td><td>○</td></tr>
+<tr><td>아스달 연대기 (Netmarble)</td><td>○</td></tr>
+<tr><td>조선협객전2M (스마트나우)</td><td>○</td></tr>
+<tr><td>천년 어게인 (VFive Games)</td><td>○</td></tr>
+<tr><td>R.O.H.A.N.2 (PLAYWITH)</td><td>○</td></tr>
+<tr><td style="color:#dc3545;">호연 (NCSOFT)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">에오스 블랙 (BluePotion)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">그라나도 에스파다M (HanbitSoft)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">GhostM (Mgame)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">미르의 전설:승자위왕 (KODA DUCK)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td rowspan="10">2025</td><td>RF 온라인 넥스트 (Netmarble)</td><td>○</td></tr>
+<tr><td>뱀피르 (Netmarble)</td><td>○</td></tr>
+<tr><td>레전드 오브 이미르 (Wemade)</td><td>○</td></tr>
+<tr><td>아키텍트 (DRIMAGE)</td><td>○</td></tr>
+<tr><td>AION2 (NC)</td><td>○</td></tr>
+<tr><td>마비노기 모바일 (NEXON)</td><td>○</td></tr>
+<tr><td>DK모바일 리본 (NTRANCE)</td><td>○</td></tr>
+<tr><td style="color:#dc3545;">더 스타라이트 (GameTales)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">R2 ORIGIN (WEBZEN)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">MU: Pocket Knights (WEBZEN)</td><td style="color:#dc3545;">×</td></tr>
+</table>
+</details>
+
+<details>
+<summary style="font-weight:600; color:#dc3545;">RPG-비MMORPG — 생존율 변동 (모수적음)</summary>
+<table>
+<tr><th>연도</th><th>게임명 (퍼블리셔)</th><th>3개월 생존여부</th></tr>
+<tr><td rowspan="4">2022</td><td>던전앤파이터 모바일 (NEXON)</td><td>○</td></tr>
+<tr><td style="color:#dc3545;">신의 탑M (NGELGAMES)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">Tailed Demon Slayer (NSTAGE)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">페어리테일:위대한여정 (Gamepub)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td rowspan="6">2023</td><td>트릭컬 리바이브 (EPIDGames)</td><td>○</td></tr>
+<tr><td>Tower of God: NEW WORLD (Netmarble)</td><td>○</td></tr>
+<tr><td>소녀전쟁 (tlcGames)</td><td>○</td></tr>
+<tr><td style="color:#dc3545;">블랙클로버 모바일 (VIC Game)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">BrownDust2 (NEOWIZ)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">천마 키우기 (Standegg)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td rowspan="4">2024</td><td style="color:#dc3545;">ASTRA: Knights of Veda (DRIMAGE)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">스타시드 (Com2uS)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">Legend of Heroes: Gagharv (FOW)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">Gods Raid (THUMBAGE)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td rowspan="8">2025</td><td>Seven Knights Re:BIRTH (Netmarble)</td><td>○</td></tr>
+<tr><td>MapleStory: Idle RPG (NEXON)</td><td>○</td></tr>
+<tr><td>잠룡 (Standegg)</td><td>○</td></tr>
+<tr><td>Legend of Avatar (BillionaireGames)</td><td>○</td></tr>
+<tr><td>Chaos Zero Nightmare (Smilegate)</td><td>○</td></tr>
+<tr><td style="color:#dc3545;">+99 강화나무몽둥이 (STUDIO LICO)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">StarSavior (Studio B Side)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">KOF AFK (Netmarble)</td><td style="color:#dc3545;">×</td></tr>
+</table>
+</details>
+
+<details>
+<summary style="font-weight:600; color:#fd7e14;">RPG-미분류 — 생존율 0~13% (소규모)</summary>
+<table>
+<tr><th>연도</th><th>게임명 (퍼블리셔)</th><th>3개월 생존여부</th></tr>
+<tr><td rowspan="15">2022</td><td>더프레이 MMORPG (나우플레이)</td><td>○</td></tr>
+<tr><td>MARVEL Future Fight (Netmarble)</td><td>○</td></tr>
+<tr><td style="color:#dc3545;">DIVINE ARENA (아이톡시)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">카운터사이드 (NEXON)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">에곤 : 인페르나 벨룸 (아이톡시)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">뮤오리진2 (Webzen)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">열혈강호W (RogueWave)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">트리 오브 세이비어 M (IMC GAMES)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">퍼펙트 아레나 (NOBLEGAMES)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">Raising Poseidon (MouseDuck)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">에오스 레드 (BluePotion)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">Hero Blaze (Natris)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">라그나로크 아레나 (GRAVITY)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">프린세스 커넥트 (Kakao Games)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">라그나로크 오리진 (GRAVITY)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td rowspan="6">2023</td><td style="color:#dc3545;">Cat Hero (Gameduo)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">어둠의 실력자 (Webzen)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">십이지천M 오리진 (NTORI)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">카이온M (빌리온게임즈)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">CounterSide (STUDIOBSIDE)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">Another Dungeon (Game Duo)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td>2024</td><td style="color:#dc3545;">라테일 플러스 (VFive Games)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td rowspan="3">2025</td><td style="color:#dc3545;">카발RED (ESTgames)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">Karnark (mobirix)</td><td style="color:#dc3545;">×</td></tr>
+<tr><td style="color:#dc3545;">Hunter Raid (Gameberry)</td><td style="color:#dc3545;">×</td></tr>
+</table>
+</details>
+
+<details>
+<summary style="font-weight:600; color:#888;">기타 장르 (Strategy, Simulation, Casual, Sports 등)</summary>
+<table>
+<tr><th>연도</th><th>게임명 (퍼블리셔)</th><th>장르</th><th>3개월 생존여부</th></tr>
+<tr><td rowspan="5">2022</td><td>우마무스메 (Kakao Games)</td><td>Adventure</td><td>○</td></tr>
+<tr><td>Archer Forest (Gameduo)</td><td>Adventure</td><td>○</td></tr>
+<tr><td>모두의마블 (Netmarble)</td><td>Board</td><td>○</td></tr>
+<tr><td>컴투스프로야구 (Com2uS)</td><td>Sports</td><td>○</td></tr>
+<tr><td>Idle MoonRabbit (Ablegames)</td><td>Simulation</td><td>○</td></tr>
+<tr><td rowspan="4">2023</td><td>Limbus Company (Project Moon)</td><td>Strategy</td><td>○</td></tr>
+<tr><td>우파루 오딧세이 (NHN)</td><td>Simulation</td><td>○</td></tr>
+<tr><td>Seven Knights Idle Adventure (Netmarble)</td><td>Casual</td><td>○</td></tr>
+<tr><td>Fortress Saga (CookApps)</td><td>Simulation</td><td>○</td></tr>
+<tr><td rowspan="3">2024</td><td>Solo Leveling:Arise (Netmarble)</td><td>Action</td><td>○</td></tr>
+<tr><td>CookieRun: Tower of Adventures (Devsisters)</td><td>Action</td><td>○</td></tr>
+<tr><td>Lucky Defense (111%)</td><td>Casual</td><td>○</td></tr>
+<tr><td rowspan="1">2025</td><td>Coop TD: Together (SuperMagic)</td><td>Strategy</td><td>○</td></tr>
+</table>
+<p class="note">생존한 게임만 표시. 이탈한 게임은 생략.</p>
+</details>
+
+
+</div>
+
+<hr class="divider">
+
+<!-- ============================================================ -->
+<!-- PART 3: 요약 -->
+<!-- ============================================================ -->
+<div class="section">
+<h2>3. 25년 전후 요약 — 물량 vs 성적</h2>
+
+<p class="desc">※ 생존율은 25년 기준 (26년 1Q는 3개월 생존 측정 불가로 제외)</p>
+<table>
+<tr><th>퍼블리셔</th><th>월평균 진입<br><span class="sub">22~24 → 25</span></th><th>생존율<br><span class="sub">22~24 → 25</span></th><th>평가</th></tr>
+<tr><td>KR</td><td class="cell-split">3.2 → 2.5<br><span class="sub">(39% → 36%)</span></td><td>44.2% → 48.1%</td><td class="left">모든 장르 물량 감소, 성적 유지</td></tr>
+<tr><td>중화권</td><td class="cell-split">3.9 → 3.0<br><span class="sub">(49% → 43%)</span></td><td>52.7% → 39.4%</td><td class="left">RPG 물량 감소, 성적 하락.<br>RPG 하락 대응으로 비RPG(Strategy·Casual·Puzzle) 투입 확대</td></tr>
+<tr><td>기타</td><td class="cell-split">0.6 → 1.2<br><span class="sub">(7% → 17%)</span></td><td>31.6% → 7.7%</td><td class="left">투입 증가로 비중 증가하나 성적 낮음</td></tr>
+</table>
+
+<div class="summary-box">
+<strong>핵심 결론</strong><br><br>
+<strong>1. 물량 감소:</strong> 월 8.5→6.9개. KR > 중화권 순 감소. 중화권은 비RPG 증가로 일부 상쇄.<br>
+<strong>2. 생존율:</strong> KR 48~50% 안정. 중화권 39%로 하락 — RPG(57→30%)가 원인, 비RPG는 60%+ 양호.<br>
+<strong>3. 중화권 다변화:</strong> RPG 하락 대응으로 비RPG(Strategy·Casual·Puzzle) 투입 확대 중.
+</div>
+</div>
+
+<p class="note" style="text-align:center; margin-top:24px;">분석 기준일: 2026-04-20 | 데이터: Sensor Tower via AI_mobilegame DB (dw_app_monthly)</p>
+
+</div>
+</body>
+</html>
