@@ -2547,7 +2547,7 @@ ctx.fillText('3개월 생존율 (전체)', pad.left, 16);
 <td class="cell-split"><span class="pct">58.8%</span><br><span class="sub">10/17</span></td>
 <td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">7/14</span></td>
 <td class="cell-split"><span class="pct">52.4%</span><br><span class="sub">11/21</span></td>
-<td class="cell-split"><span class="pct down">33.3%</span><br><span class="sub">6/18</span></td>
+<td class="cell-split"><span class="pct down">37.5%</span><br><span class="sub">6/16</span></td>
 <td class="down">25년 감소</td></tr>
 <tr><td>KR</td>
 <td class="cell-split"><span class="pct">33.3%</span><br><span class="sub">1/3</span></td>
@@ -2559,7 +2559,7 @@ ctx.fillText('3개월 생존율 (전체)', pad.left, 16);
 <td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">3/6</span></td>
 <td class="cell-split"><span class="pct">0.0%</span><br><span class="sub">0/1</span></td>
 <td class="cell-split"><span class="pct">0.0%</span><br><span class="sub">0/1</span></td>
-<td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">5/5</span></td>
+<td class="cell-split"><span class="pct">71.4%</span><br><span class="sub">5/7</span></td>
 <td class="neutral">(모수적음)</td></tr>
 <tr><td>북미</td>
 <td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">1/2</span></td>
@@ -2589,7 +2589,7 @@ const chartH = H - pad.top - pad.bottom;
 const years = [2022,2023,2024,2025];
 const series = [
     {name:'JP', data:[26.3,27.3,41.2,50.0], color:'#fd7e14'},
-    {name:'중화권', data:[58.8,50.0,52.4,33.3], color:'#dc3545'},
+    {name:'중화권', data:[58.8,50.0,52.4,37.5], color:'#dc3545'},
     {name:'KR', data:[33.3,25.0,40.0,40.0], color:'#4a6cf7'}
 ];
 const minV = 0, maxV = 70;
@@ -2635,28 +2635,46 @@ ctx.fillText('3개월 생존율 — 퍼블리셔 그룹별', pad.left, 16);
 })();
 </script>
 
-<p class="note"><strong>JP와 중화권의 추이가 역전.</strong> 22년 JP +26% vs 중화권 +59%로 중화권이 2배 이상 높았으나, 25년 JP +50% vs 중화권 +33%로 완전히 뒤집힘.</p>
+<p class="note"><strong>JP와 중화권의 추이가 역전.</strong> 22년 JP +26% vs 중화권 +59%로 중화권이 2배 이상 높았으나, 25년 JP +50% vs 중화권 +38%로 완전히 뒤집힘.</p>
 
-<h3>2-3. 중화권 퍼블리셔 내 장르별 3개월 생존율 <span style="font-size:0.8rem; color:#999; font-weight:400;">(모수 작으므로 참고만)</span></h3>
+<h3>2-3. 중화권 퍼블리셔 내 장르별 3개월 생존율 <span style="font-size:0.8rem; color:#999; font-weight:400;">(lv2 분류 · 모수 작으므로 참고만)</span></h3>
 <table>
 <tr><th>장르</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>추이</th></tr>
-<tr class="highlight"><td>RPG</td>
+<tr class="highlight"><td>Role Playing</td>
 <td class="cell-split"><span class="pct">66.7%</span><br><span class="sub">6/9</span></td>
-<td class="cell-split"><span class="pct">54.5%</span><br><span class="sub">6/11</span></td>
-<td class="cell-split"><span class="pct">35.7%</span><br><span class="sub">5/14</span></td>
-<td class="cell-split"><span class="pct down">25.0%</span><br><span class="sub">2/8</span></td>
-<td class="down">67%→25% 감소</td></tr>
-<tr><td>비RPG</td>
-<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">4/8</span></td>
-<td class="cell-split"><span class="pct">33.3%</span><br><span class="sub">1/3</span></td>
-<td class="cell-split"><span class="pct">85.7%</span><br><span class="sub">6/7</span></td>
-<td class="cell-split"><span class="pct">40.0%</span><br><span class="sub">4/10</span></td>
-<td class="neutral">변동, 25년 RPG보다 높음</td></tr>
+<td class="cell-split"><span class="pct">55.6%</span><br><span class="sub">5/9</span></td>
+<td class="cell-split"><span class="pct">36.4%</span><br><span class="sub">4/11</span></td>
+<td class="cell-split"><span class="pct down">20.0%</span><br><span class="sub">1/5</span></td>
+<td class="down">67%→20% 감소</td></tr>
+<tr><td>Strategy</td>
+<td class="cell-split"><span class="pct">66.7%</span><br><span class="sub">2/3</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">1/2</span></td>
+<td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">2/2</span></td>
+<td class="cell-split"><span class="pct up">75.0%</span><br><span class="sub">3/4</span></td>
+<td class="up">4년 안정·25년 75%</td></tr>
+<tr><td>방치형</td>
+<td class="cell-split"><span class="pct">-</span><br><span class="sub">-</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">1/2</span></td>
+<td class="cell-split"><span class="pct">25.0%</span><br><span class="sub">1/4</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">1/2</span></td>
+<td class="neutral">소폭 회복</td></tr>
+<tr><td>머지 ⭐</td>
+<td class="cell-split"><span class="pct">-</span><br><span class="sub">-</span></td>
+<td class="cell-split"><span class="pct">-</span><br><span class="sub">-</span></td>
+<td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">2/2</span></td>
+<td class="cell-split"><span class="pct up">100.0%</span><br><span class="sub">1/1</span></td>
+<td class="up">2년 완전 생존</td></tr>
+<tr><td>기타<small style="color:#94a3b8;font-weight:400;"> (Action/Adv/Sim/Card/Casual/Music)</small></td>
+<td class="cell-split"><span class="pct">40.0%</span><br><span class="sub">2/5</span></td>
+<td class="cell-split"><span class="pct">0.0%</span><br><span class="sub">0/1</span></td>
+<td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">2/2</span></td>
+<td class="cell-split"><span class="pct down">0.0%</span><br><span class="sub">0/4</span></td>
+<td class="neutral">변동 큼</td></tr>
 <tr style="font-weight:600; border-top:2px solid #ddd;"><td>전체 (중화권)</td>
 <td class="cell-split"><span class="pct">58.8%</span><br><span class="sub">10/17</span></td>
 <td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">7/14</span></td>
 <td class="cell-split"><span class="pct">52.4%</span><br><span class="sub">11/21</span></td>
-<td class="cell-split"><span class="pct down">33.3%</span><br><span class="sub">6/18</span></td>
+<td class="cell-split"><span class="pct down">37.5%</span><br><span class="sub">6/16</span></td>
 <td class="down">25년 감소</td></tr>
 </table>
 
@@ -2673,8 +2691,11 @@ const chartW = W - pad.left - pad.right;
 const chartH = H - pad.top - pad.bottom;
 const years = [2022,2023,2024,2025];
 const series = [
-    {name:'RPG', data:[66.7,54.5,35.7,25.0], color:'#dc3545', thick:true},
-    {name:'비RPG', data:[50.0,33.3,85.7,40.0], color:'#28a745', thick:true}
+    {name:'Role Playing', data:[66.7,55.6,36.4,20.0], color:'#dc3545', thick:true},
+    {name:'Strategy', data:[66.7,50.0,100.0,75.0], color:'#28a745', thick:true},
+    {name:'방치형', data:[null,50.0,25.0,50.0], color:'#fd7e14'},
+    {name:'머지', data:[null,null,100.0,100.0], color:'#8e44ad'},
+    {name:'기타', data:[40.0,0.0,100.0,0.0], color:'#94a3b8'}
 ];
 const minV = 0, maxV = 100;
 function xPos(i){ return pad.left + (i/(years.length-1))*chartW; }
@@ -2691,44 +2712,52 @@ years.forEach((y,i)=>{ ctx.fillText(y, xPos(i), H-pad.bottom+16); });
 
 series.forEach(s=>{
     ctx.beginPath(); ctx.strokeStyle = s.color;
-    ctx.lineWidth = s.thick ? 2.5 : 1.2;
+    ctx.lineWidth = s.thick ? 2.5 : 1.6;
+    let started = false;
     s.data.forEach((v,i)=>{
-        if(i===0) ctx.moveTo(xPos(i), yPos(v));
+        if(v===null) return;
+        if(!started){ ctx.moveTo(xPos(i), yPos(v)); started = true; }
         else ctx.lineTo(xPos(i), yPos(v));
     });
     ctx.stroke();
     s.data.forEach((v,i)=>{
+        if(v===null) return;
         ctx.beginPath(); ctx.arc(xPos(i), yPos(v), 4, 0, Math.PI*2);
         ctx.fillStyle = s.color; ctx.fill();
-        ctx.fillStyle = s.color; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'center';
-        ctx.fillText(v+'%', xPos(i), yPos(v)-10);
     });
+    // last value label
+    const lastIdx = s.data.length-1;
+    const lastV = s.data[lastIdx];
+    if(lastV !== null){
+        ctx.fillStyle = s.color; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'left';
+        ctx.fillText(lastV.toFixed(1)+'%', xPos(lastIdx)+8, yPos(lastV)+4);
+    }
 });
 
 ctx.font = '10px Segoe UI'; ctx.textAlign = 'left';
 series.forEach((s,i)=>{
     const lx = W - pad.right + 10, ly = pad.top + 10 + i*22;
-    ctx.strokeStyle = s.color; ctx.lineWidth = 2.5;
+    ctx.strokeStyle = s.color; ctx.lineWidth = s.thick ? 2.5 : 1.6;
     ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx+14, ly); ctx.stroke();
     ctx.fillStyle = '#333';
     ctx.fillText(s.name, lx+18, ly+4);
 });
 ctx.fillStyle = '#666'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'left';
-ctx.fillText('중화권 장르별 3개월 생존율', pad.left, 16);
+ctx.fillText('중화권 장르별 3개월 생존율 (lv2 분류)', pad.left, 16);
 })();
 </script>
-<p class="note">중화권 생존율 하락의 핵심 = <strong>RPG 장르 (67%→25%)</strong>. 25년 RPG는 4개 중 1개만 생존할 정도로 악화. 비RPG는 Strategy·Action 주도로 40% 유지.</p>
+<p class="note">중화권 생존율 하락의 핵심 = <strong>Role Playing (67%→20%)</strong>. 25년 RPG는 5개 중 1개만 생존. 반면 <strong>Strategy(75%)·머지(100%)·방치형(50%) 등 lv2 신규 장르가 양호</strong>하게 유지. 기타(Action·Adv·Sim 등)는 변동 큼.</p>
 
 <div class="summary-box" style="margin-top:16px;">
 <strong>생존율 핵심 요약:</strong><br><br>
-JP 시장에서 <strong>JP 자국 퍼블리셔 생존율이 22년 26.3% → 25년 50.0%로 2배 상승</strong>. 반대로 <strong>중화권은 58.8% → 33.3%로 감소</strong>. 중화권 RPG(67%→25%)가 하락을 주도했으며, 비RPG도 40%로 유지.
+JP 시장에서 <strong>JP 자국 퍼블리셔 생존율이 22년 26.3% → 25년 50.0%로 2배 상승</strong>. 반대로 <strong>중화권은 58.8% → 37.5%로 감소</strong>. 중화권 Role Playing(67%→20%)이 하락을 주도했으며, <strong>Strategy(75%)·머지(100%)·방치형(50%) lv2 신규 장르는 양호</strong>하게 유지.
 </div>
 
-<h3>2-4. JP 퍼블리셔 내 장르별 3개월 생존율 <span style="font-size:0.8rem; color:#999; font-weight:400;">(모수 작으므로 참고만)</span></h3>
+<h3>2-4. JP 퍼블리셔 내 장르별 3개월 생존율 <span style="font-size:0.8rem; color:#999; font-weight:400;">(lv2 분류 · 모수 작으므로 참고만)</span></h3>
 <table>
 <tr><th>장르</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>추이</th></tr>
 <tr><td>RPG</td>
-<td class="cell-split"><span class="pct">30.0%</span><br><span class="sub">6/20</span></td>
+<td class="cell-split"><span class="pct">26.3%</span><br><span class="sub">5/19</span></td>
 <td class="cell-split"><span class="pct">33.3%</span><br><span class="sub">3/9</span></td>
 <td class="cell-split"><span class="pct">40.0%</span><br><span class="sub">2/5</span></td>
 <td class="cell-split"><span class="pct">33.3%</span><br><span class="sub">2/6</span></td>
@@ -2746,7 +2775,7 @@ JP 시장에서 <strong>JP 자국 퍼블리셔 생존율이 22년 26.3% → 25�
 <td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">1/1</span></td>
 <td class="neutral">(모수작음)</td></tr>
 <tr><td>Action/Adv/Strategy 등</td>
-<td class="cell-split"><span class="pct">33.3%</span><br><span class="sub">1/3</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">2/4</span></td>
 <td class="cell-split"><span class="pct">0.0%</span><br><span class="sub">0/3</span></td>
 <td class="cell-split"><span class="pct">33.3%</span><br><span class="sub">2/6</span></td>
 <td class="cell-split"><span class="pct">0.0%</span><br><span class="sub">0/2</span></td>
@@ -2859,7 +2888,7 @@ JP 시장에서 <strong>JP 자국 퍼블리셔 생존율이 22년 26.3% → 25�
 <table>
 <tr><th>퍼블리셔</th><th>월평균 진입<br><span class="sub">22~24 → 25</span></th><th>생존율<br><span class="sub">22~24 → 25</span></th><th>평가</th></tr>
 <tr><td>JP</td><td class="cell-split">2.3 → 1.1<br><span class="sub">(52% → 30%)</span></td><td class="up">31.6% → 50.0%</td><td class="left"><strong>물량 감소, 성적 대폭 상승.</strong><br>Sim/Sports 장르 100% 생존 (Bandai IP 주도)</td></tr>
-<tr><td>중화권</td><td class="cell-split">1.6 → 1.6<br><span class="sub">(37% → 45%)</span></td><td class="down">53.7% → 33.3%</td><td class="left"><strong>물량 유지, 성적 악화.</strong><br>RPG 생존 67%→25% 감소가 주원인. Strategy·Action으로 다변화 대응</td></tr>
+<tr><td>중화권</td><td class="cell-split">1.6 → 1.6<br><span class="sub">(37% → 45%)</span></td><td class="down">53.7% → 37.5%</td><td class="left"><strong>물량 유지, 성적 악화.</strong><br>RPG 생존 67%→20% 감소가 주원인. Strategy·Action으로 다변화 대응</td></tr>
 <tr><td>KR</td><td class="cell-split">0.4 → 0.5<br><span class="sub">(9% → 13%)</span></td><td class="up">32.8% → 40.0%</td><td class="left">소폭 증가 + 성적 개선 (RAVEN2, 7KR 등)</td></tr>
 <tr><td>기타+북미</td><td class="cell-split">0.4 → 0.5<br><span class="sub">(n 매우 적음)</span></td><td class="neutral">변동 큼</td><td class="left">25년 글로벌 캐주얼/퍼즐 진입 (Disney Solitaire 등)</td></tr>
 </table>
@@ -2867,8 +2896,8 @@ JP 시장에서 <strong>JP 자국 퍼블리셔 생존율이 22년 26.3% → 25�
 <div class="summary-box">
 <strong>핵심 결론</strong><br><br>
 <strong>1. 물량 감소:</strong> 월 6.0→3.6개(-40%). JP 자국 퍼블리셔가 3.5→1.1로 주도. 26 1Q는 월1.5로 감소.<br>
-<strong>2. JP vs 중화권 역전:</strong> 22년 JP +26% vs 중화권 +59%였던 생존율이 25년 JP +50% vs 중화권 +33%로 완전히 뒤집힘. <strong>JP 시장은 물량은 줄었지만 성적은 개선</strong>.<br>
-<strong>3. 장르 역학:</strong> 중화권은 RPG 67%→25% 감소 → Strategy·Action·Adventure로 다변화 대응 중. JP는 Sim/Sports(대형 IP 기반)가 29%→100%로 급상승하며 JP 퍼블리셔 생존율 견인.<br>
+<strong>2. JP vs 중화권 역전:</strong> 22년 JP +26% vs 중화권 +59%였던 생존율이 25년 JP +50% vs 중화권 +38%로 완전히 뒤집힘. <strong>JP 시장은 물량은 줄었지만 성적은 개선</strong>.<br>
+<strong>3. 장르 역학:</strong> 중화권은 RPG 67%→20% 감소 → Strategy·Action·Adventure로 다변화 대응 중. JP는 Sim/Sports(대형 IP 기반)가 29%→100%로 급상승하며 JP 퍼블리셔 생존율 견인.<br>
 <strong>4. KR 퍼블리셔 포지션:</strong> JP 시장 내 비중 작지만(~12%) 꾸준히 증가. 25년 RAVEN2·Seven Knights Re:BIRTH 등 진입.
 </div>
 </div>
@@ -3662,12 +3691,127 @@ ctx.fillText('3개월 생존율 — 퍼블리셔 그룹별', pad.left, 16);
 US시장은 전체 생존율이 60~78%로 KR(37~49%), JP(36~48%)보다 높다. 기타 그룹(글로벌 스튜디오)이 92%로 가장 높고, 북미 퍼블리셔는 78%→40%로 하락 추세.
 </div>
 
-<h3>2-4. 기타 퍼블리셔 내 장르별 3개월 생존율</h3>
+<h3>2-3. 중화권 퍼블리셔 내 장르별 3개월 생존율 <span style="font-size:0.8rem; color:#999; font-weight:400;">(lv2 분류 · 모수 작으므로 참고만)</span></h3>
+<table>
+<tr><th>장르</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>추이</th></tr>
+<tr><td>Role Playing</td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">2/4</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">1/2</span></td>
+<td class="cell-split"><span class="pct down">0.0%</span><br><span class="sub">0/2</span></td>
+<td class="cell-split"><span class="pct down">0.0%</span><br><span class="sub">0/1</span></td>
+<td class="down">25년 0% 부진</td></tr>
+<tr class="highlight"><td>Strategy</td>
+<td class="cell-split"><span class="pct">-</span><br><span class="sub">-</span></td>
+<td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">2/2</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">2/4</span></td>
+<td class="cell-split"><span class="pct up">100.0%</span><br><span class="sub">2/2</span></td>
+<td class="up">Last War·Whiteout·Kingshot 강세</td></tr>
+<tr><td>방치형</td>
+<td class="cell-split"><span class="pct">-</span><br><span class="sub">-</span></td>
+<td class="cell-split"><span class="pct">-</span><br><span class="sub">-</span></td>
+<td class="cell-split"><span class="pct">66.7%</span><br><span class="sub">2/3</span></td>
+<td class="cell-split"><span class="pct">-</span><br><span class="sub">-</span></td>
+<td class="neutral">24년 진입만</td></tr>
+<tr><td>머지 ⭐</td>
+<td class="cell-split"><span class="pct">-</span><br><span class="sub">-</span></td>
+<td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">1/1</span></td>
+<td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">1/1</span></td>
+<td class="cell-split"><span class="pct up">100.0%</span><br><span class="sub">2/2</span></td>
+<td class="up">3년 완전 생존</td></tr>
+<tr><td>기타<small style="color:#94a3b8;font-weight:400;"> (Action/Adv/Casual 등)</small></td>
+<td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">2/2</span></td>
+<td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">1/1</span></td>
+<td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">1/1</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">1/2</span></td>
+<td class="neutral">대체로 양호</td></tr>
+<tr style="font-weight:600; border-top:2px solid #ddd;"><td>전체 (중화권)</td>
+<td class="cell-split"><span class="pct">66.7%</span><br><span class="sub">4/6</span></td>
+<td class="cell-split"><span class="pct">83.3%</span><br><span class="sub">5/6</span></td>
+<td class="cell-split"><span class="pct">54.5%</span><br><span class="sub">6/11</span></td>
+<td class="cell-split"><span class="pct up">71.4%</span><br><span class="sub">5/7</span></td>
+<td class="up">25년 회복</td></tr>
+</table>
+
+<div style="margin: 20px 0;">
+<canvas id="us_chartSurvCN" width="700" height="240" style="max-width:100%;"></canvas>
+</div>
+<script>
+(function(){
+const canvas = document.getElementById('us_chartSurvCN');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const pad = {top:30, right:200, bottom:40, left:50};
+const chartW = W - pad.left - pad.right;
+const chartH = H - pad.top - pad.bottom;
+const years = [2022,2023,2024,2025];
+const series = [
+    {name:'Role Playing', data:[50.0,50.0,0.0,0.0], color:'#dc3545', thick:true},
+    {name:'Strategy', data:[null,100.0,50.0,100.0], color:'#28a745', thick:true},
+    {name:'방치형', data:[null,null,66.7,null], color:'#fd7e14'},
+    {name:'머지', data:[null,100.0,100.0,100.0], color:'#8e44ad'},
+    {name:'기타', data:[100.0,100.0,100.0,50.0], color:'#94a3b8'}
+];
+const minV = 0, maxV = 100;
+function xPos(i){ return pad.left + (i/(years.length-1))*chartW; }
+function yPos(v){ return pad.top + chartH - ((v-minV)/(maxV-minV))*chartH; }
+
+ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+for(let v=0; v<=100; v+=20){
+    ctx.beginPath(); ctx.moveTo(pad.left, yPos(v)); ctx.lineTo(W-pad.right, yPos(v)); ctx.stroke();
+}
+ctx.fillStyle = '#999'; ctx.font = '10px Segoe UI'; ctx.textAlign = 'right';
+for(let v=0; v<=100; v+=20){ ctx.fillText(v+'%', pad.left-6, yPos(v)+4); }
+ctx.textAlign = 'center'; ctx.fillStyle = '#666';
+years.forEach((y,i)=>{ ctx.fillText(y, xPos(i), H-pad.bottom+16); });
+
+series.forEach(s=>{
+    ctx.beginPath(); ctx.strokeStyle = s.color;
+    ctx.lineWidth = s.thick ? 2.5 : 1.6;
+    let started = false;
+    s.data.forEach((v,i)=>{
+        if(v===null) return;
+        if(!started){ ctx.moveTo(xPos(i), yPos(v)); started = true; }
+        else ctx.lineTo(xPos(i), yPos(v));
+    });
+    ctx.stroke();
+    s.data.forEach((v,i)=>{
+        if(v===null) return;
+        ctx.beginPath(); ctx.arc(xPos(i), yPos(v), 4, 0, Math.PI*2);
+        ctx.fillStyle = s.color; ctx.fill();
+    });
+    const lastIdx = s.data.length-1;
+    const lastV = s.data[lastIdx];
+    if(lastV !== null){
+        ctx.fillStyle = s.color; ctx.font = 'bold 11px Segoe UI'; ctx.textAlign = 'left';
+        ctx.fillText(lastV.toFixed(1)+'%', xPos(lastIdx)+8, yPos(lastV)+4);
+    }
+});
+
+ctx.font = '10px Segoe UI'; ctx.textAlign = 'left';
+series.forEach((s,i)=>{
+    const lx = W - pad.right + 10, ly = pad.top + 10 + i*22;
+    ctx.strokeStyle = s.color; ctx.lineWidth = s.thick ? 2.5 : 1.6;
+    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx+14, ly); ctx.stroke();
+    ctx.fillStyle = '#333';
+    ctx.fillText(s.name, lx+18, ly+4);
+});
+ctx.fillStyle = '#666'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'left';
+ctx.fillText('중화권 장르별 3개월 생존율 (lv2 분류)', pad.left, 16);
+})();
+</script>
+<p class="note">US 중화권 퍼블 핵심 = <strong>Strategy(50~100%)·머지(100% 유지)</strong> 강세. <strong>Role Playing은 24~25년 0% 부진</strong>. Strategy는 Last War:Survival Game·Whiteout Survival·Kingshot 등 메가히트가 견인하며 25년 100% 생존.</p>
+
+<div class="summary-box" style="margin-top:16px;">
+<strong>중화권 생존율 핵심 요약 (lv2):</strong><br><br>
+US 시장에서 중화권 퍼블리셔의 생존율은 22년 67% → 25년 71%로 안정 유지. 하락 부문은 <strong>Role Playing (24~25년 0% 부진)</strong>이지만 <strong>Strategy(100%·Last War·Whiteout)·머지(100%)·방치형(67%)</strong> 등 lv2 신규 장르의 양호한 성과로 전체 균형 유지.
+</div>
+
+<h3>2-4. 기타 퍼블리셔 내 장르별 3개월 생존율 <span style="font-size:0.8rem; color:#999; font-weight:400;">(lv2 분류)</span></h3>
 <table>
 <tr><th>장르</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>추이</th></tr>
 <tr class="highlight"><td>Puzzle</td>
 <td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">1/1</span></td>
-<td class="cell-split"><span class="pct">75.0%</span><br><span class="sub">3/4</span></td>
+<td class="cell-split"><span class="pct">66.7%</span><br><span class="sub">2/3</span></td>
 <td class="cell-split"><span class="pct">80.0%</span><br><span class="sub">4/5</span></td>
 <td class="cell-split"><span class="pct up">100.0%</span><br><span class="sub">6/6</span></td>
 <td class="neutral">(모수적음)</td></tr>
@@ -3675,7 +3819,7 @@ US시장은 전체 생존율이 60~78%로 KR(37~49%), JP(36~48%)보다 높다. �
 <td class="cell-split"><span class="pct">100.0%</span><br><span class="sub">1/1</span></td>
 <td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">1/2</span></td>
 <td class="cell-split"><span class="pct">-</span><br><span class="sub">-</span></td>
-<td class="cell-split"><span class="pct up">100.0%</span><br><span class="sub">4/4</span></td>
+<td class="cell-split"><span class="pct up">100.0%</span><br><span class="sub">2/2</span></td>
 <td class="neutral">(모수적음)</td></tr>
 <tr><td>Strategy/RPG</td>
 <td class="cell-split"><span class="pct">-</span><br><span class="sub">-</span></td>
@@ -3683,11 +3827,11 @@ US시장은 전체 생존율이 60~78%로 KR(37~49%), JP(36~48%)보다 높다. �
 <td class="cell-split"><span class="pct down">0.0%</span><br><span class="sub">0/1</span></td>
 <td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">1/2</span></td>
 <td class="neutral">(모수적음)</td></tr>
-<tr><td>기타(Action/Adv/Board/Card/Casino/Arcade)</td>
+<tr><td>기타(Action/Adv/Board/Card/Casino(PvE)/Arcade/머지/방치형)</td>
 <td class="cell-split"><span class="pct">75.0%</span><br><span class="sub">3/4</span></td>
-<td class="cell-split"><span class="pct down">0.0%</span><br><span class="sub">0/1</span></td>
+<td class="cell-split"><span class="pct">50.0%</span><br><span class="sub">1/2</span></td>
 <td class="cell-split"><span class="pct up">100.0%</span><br><span class="sub">2/2</span></td>
-<td class="cell-split"><span class="pct up">100.0%</span><br><span class="sub">1/1</span></td>
+<td class="cell-split"><span class="pct up">100.0%</span><br><span class="sub">3/3</span></td>
 <td class="neutral">(모수적음)</td></tr>
 <tr style="font-weight:600; border-top:2px solid #ddd;"><td>전체 (기타 퍼블리셔)</td>
 <td class="cell-split"><span class="pct">83.3%</span><br><span class="sub">5/6</span></td>
@@ -3698,8 +3842,8 @@ US시장은 전체 생존율이 60~78%로 KR(37~49%), JP(36~48%)보다 높다. �
 </table>
 
 <div class="summary-box" style="margin-top:16px;">
-<strong>기타 퍼블리셔 생존율 상승의 핵심 = Puzzle + Simulation/Casual (둘 다 25년 100%).</strong><br>
-Puzzle은 22년부터 75~100% 수준 유지하며 25년 6개 전원 생존 — Pixel Flow!, Color Block Jam, All in Hole 등 터키/유럽 스튜디오의 퍼즐/머지 게임이 대거 안착. Simulation/Casual도 25년 신규 4개 전원 생존(Merge Cooking, Magic Sort!, Hunting Sniper 등). 반면 <strong>Strategy/RPG는 25년 50%</strong>로 부진하며, RPG는 23년(0/1), 25년(0/1) 모두 이탈.
+<strong>기타 퍼블리셔 생존율 상승의 핵심 = Puzzle + 기타(머지·방치형 포함) 둘 다 25년 100%.</strong><br>
+Puzzle은 22년부터 67~100% 수준 유지하며 25년 6개 전원 생존 — Pixel Flow!, Color Block Jam, All in Hole 등 터키/유럽 스튜디오의 퍼즐 게임이 대거 안착. <strong>lv2 머지·방치형</strong>은 기타 버킷에 포함되어 25년 3개 전원 생존(Disney Solitaire·Merge Cooking·Carnival Tycoon). Simulation/Casual은 25년 2개 전원 생존(Magic Sort!·Hunting Sniper). 반면 <strong>Strategy/RPG는 25년 50%</strong>로 부진하며, RPG는 23년(0/1), 25년(0/1) 모두 이탈.
 </div>
 
 </div>
@@ -5068,7 +5212,7 @@ function swNgTab(id) {
         <thead><tr><th>지표</th><th class="num">'22</th><th class="num">'23</th><th class="num">'24</th><th class="num">'25</th><th class="num col26">'26.1Q</th><th class="num">25년 전후 변화 (월평균)<br><small style="color:#94a3b8;font-weight:400;">전 22~24 / 후 25~26.1Q</small></th></tr></thead>
         <tbody>
           <tr><td>월평균 매출 (억원)</td><td class="num">9,700</td><td class="num dn">9,062</td><td class="num up">9,157</td><td class="num dn">9,058</td><td class="num col26 dn">8,611</td><td class="num dn"><strong>9,306 → 8,969</strong><br>-337억 (-4%)</td></tr>
-          <tr><td>월평균 MAU (만명)</td><td class="num">10,158</td><td class="num dn">9,588</td><td class="num dn">8,647</td><td class="num up">8,716</td><td class="num col26 dn">8,466</td><td class="num dn"><strong>9,464 → 8,666</strong><br>-807만 (-9%)</td></tr>
+          <tr><td>월평균 MAU (만명)</td><td class="num">10,158</td><td class="num dn">9,588</td><td class="num dn">8,647</td><td class="num up">8,716</td><td class="num col26 dn">8,466</td><td class="num dn"><strong>9,464 → 8,666</strong><br>-798만 (-8%)</td></tr>
           <tr><td>ARPMAU (원/MAU)</td><td class="num">9,549</td><td class="num">9,451</td><td class="num up">10,591</td><td class="num dn">10,392</td><td class="num col26 dn">10,171</td><td class="num up"><strong>9,864 → 10,348</strong><br>+514원 (+5%)</td></tr>
         </tbody>
       </table>
@@ -5137,7 +5281,7 @@ function swNgTab(id) {
         <tbody>
           <tr class=""><td>일본 (JP)</td><td class="num">6,102억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">62.9%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">52게임</span></td><td class="num dn">5,583억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">61.6%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">52게임</span></td><td class="num dn">5,038억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">55.0%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">49게임</span></td><td class="num dn">4,952억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">54.7%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">49게임</span></td><td class="num col26 dn">4,434억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">51.5%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">47게임</span></td><td class="num dn"><strong>5,574억 → 4,848억</strong><br>-726억 (-13%)</td></tr>
           <tr style="background:#fee2e2;"><td style="padding-left:28px;font-size:0.72rem;background:#fee2e2;font-weight:700;color:#991b1b;">└ 일본 TOP 5 합산 (Bandai Namco·KONAMI·XFLAG·Cygames·Aniplex)</td><td class="num" style="font-size:0.7rem;color:#475569;">3,626억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">37.1%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">21.2게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">3,133억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">34.4%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">20.3게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,739억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">29.8%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">18.5게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,710억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">29.9%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">18.6게임</span></td><td class="num col26" style="font-size:0.7rem;color:#475569;">2,569억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">29.7%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">18.7게임</span></td><td class="num dn" style="font-size:0.7rem;"><strong>3,166 → 2,682</strong><br>-484억 (-15%)</td></tr>
-          <tr style="background:#f8fafc;"><td style="padding-left:28px;font-size:0.72rem;color:#64748b;background:#f8fafc;">└ 일본 기타 (TOP 5 외)</td><td class="num" style="font-size:0.7rem;color:#475569;">2,475억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">25.5%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">31.9게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,450억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">27.0%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">32.8게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,299억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">25.0%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">31.6게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,243억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">24.7%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">31.2게임</span></td><td class="num col26" style="font-size:0.7rem;color:#475569;">1,866억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">21.6%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">29.3게임</span></td><td class="num dn" style="font-size:0.7rem;"><strong>2,408 → 2,167</strong><br>-241억 (-10%)</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding-left:28px;font-size:0.72rem;color:#64748b;background:#f8fafc;">└ 일본 기타 (TOP 5 외)</td><td class="num" style="font-size:0.7rem;color:#475569;">2,468억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">25.4%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">31.9게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,444억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">27.0%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">32.8게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,294억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">25.1%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">31.6게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,240억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">24.7%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">31.2게임</span></td><td class="num col26" style="font-size:0.7rem;color:#475569;">1,866억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">21.7%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">29.3게임</span></td><td class="num dn" style="font-size:0.7rem;"><strong>2,402 → 2,165</strong><br>-237억 (-10%)</td></tr>
           <tr class=""><td>중화권 <span style="font-size:0.65rem;color:var(--amber);">(FUNFLY 포함)</span></td><td class="num">2,511억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">25.9%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">29게임</span></td><td class="num dn">2,421억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">26.7%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">30게임</span></td><td class="num up">2,938억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">32.1%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">32게임</span></td><td class="num up">2,954억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">32.6%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">32게임</span></td><td class="num col26 up">3,001억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">34.9%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">33게임</span></td><td class="num up"><strong>2,623억 → 2,963억</strong><br>+340억 (+13%)</td></tr>
           <tr class=""><td>기타 (글로벌)</td><td class="num">418억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">4.3%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">9게임</span></td><td class="num up">520억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">5.7%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">10게임</span></td><td class="num up">660억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">7.2%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">10게임</span></td><td class="num up">747억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">8.2%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">12게임</span></td><td class="num col26 up">871억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">10.1%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">15게임</span></td><td class="num up"><strong>533억 → 772억</strong><br>+239억 (+45%)</td></tr>
           <tr class=""><td>북미</td><td class="num">374억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">3.9%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">5게임</span></td><td class="num dn">351억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">3.9%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">4게임</span></td><td class="num up">370억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">4.0%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">5게임</span></td><td class="num dn">291억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">3.2%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">4게임</span></td><td class="num col26 dn">229억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">2.7%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">3게임</span></td><td class="num dn"><strong>365억 → 279억</strong><br>-86억 (-24%)</td></tr>
@@ -5164,7 +5308,7 @@ function swNgTab(id) {
       <div class="step-num">3</div>
       <div class="step-info">
         <div class="step-q">장르별 월평균 매출 변화 <span style="font-size:0.7rem;color:#27ae60;font-weight:700;">🔄 재그룹화 적용</span> <span style="font-size:0.7rem;color:#64748b;font-weight:500;">· 정렬: 25년 후 월평균 내림차순</span></div>
-        <div class="step-a">Arcade <span class="up">+432억 (+219%)</span> · Strategy <span class="up">+498억 (+56%)</span> · Simulation <span class="up">+338억 (+77%)</span> · <strong style="color:#8e44ad;">머지 +152억 (+584%)</strong> · <strong style="color:#d35400;">Card +130억 (+298%, Shadowverse WB)</strong> 신흥 | Role Playing <span class="dn">-1,034억 (-30%)</span> · Adventure <span class="dn">-346억 (-29%)</span> · Music <span class="dn">-216억 (-53%)</span> · <strong style="color:#27ae60;">방치형 -108억 (-42%)</strong> 노후화</div>
+        <div class="step-a">Arcade <span class="up">+432억 (+219%)</span> · Strategy <span class="up">+498억 (+56%)</span> · Simulation <span class="up">+338억 (+77%)</span> · <strong style="color:#8e44ad;">머지 +161억 (+947%)</strong> · <strong style="color:#d35400;">Card +124억 (+326%, Shadowverse WB)</strong> 신흥 | Role Playing <span class="dn">-1,034억 (-30%)</span> · Adventure <span class="dn">-346억 (-29%)</span> · Music <span class="dn">-216억 (-53%)</span> · <strong style="color:#27ae60;">방치형 -43억 (-22%)</strong> 노후화</div>
       </div>
     </div>
     <div class="step-body">
@@ -5186,10 +5330,10 @@ function swNgTab(id) {
           <tr><td><strong>Arcade</strong> <small style="color:#64748b;">· Pokémon TCG Pocket, Toon Blast</small></td><td class="num">109</td><td class="num dn">108</td><td class="num up">374</td><td class="num up">667</td><td class="num col26 dn">476</td><td class="num up"><strong>197 → 629</strong><br>+432억 (<span style="color:#059669;font-weight:700;">+219%</span>)</td></tr>
           <tr><td><strong>Sports</strong> <small style="color:#64748b;">· プロ野球スピリッツA (프로야구스피리츠), eFootball</small></td><td class="num">581</td><td class="num up">685</td><td class="num dn">565</td><td class="num dn">508</td><td class="num col26 up">581</td><td class="num dn"><strong>610 → 522</strong><br>-88억 (<span style="color:#dc2626;font-weight:700;">-14%</span>)</td></tr>
           <tr><td><strong>Music</strong> <small style="color:#64748b;">· プロセカ (프로세카), あんさんぶるスターズ!! Music</small></td><td class="num">504</td><td class="num dn">416</td><td class="num dn">308</td><td class="num dn">203</td><td class="num col26 dn">153</td><td class="num dn"><strong>409 → 193</strong><br>-216억 (<span style="color:#dc2626;font-weight:700;">-53%</span>)</td></tr>
-          <tr style="background:#fff3e0;"><td><strong style="color:#d35400;">Card</strong> ⭐ <small style="color:#d35400;font-weight:600;">(CCG류 독립 분리)</small> <small style="color:#64748b;">· Shadowverse: Worlds Beyond, デュエマ プレイス</small></td><td class="num">36</td><td class="num dn">35</td><td class="num up">42</td><td class="num up">161</td><td class="num col26 up">165</td><td class="num up"><strong>44 → 174</strong><br>+130억 (<span style="color:#059669;font-weight:700;">+298%</span>)</td></tr>
+          <tr style="background:#fff3e0;"><td><strong style="color:#d35400;">Card</strong> ⭐ <small style="color:#d35400;font-weight:600;">(CCG류 독립 분리)</small> <small style="color:#64748b;">· Shadowverse: Worlds Beyond, デュエマ プレイス</small></td><td class="num">36</td><td class="num dn">35</td><td class="num up">42</td><td class="num up">161</td><td class="num col26 up">165</td><td class="num up"><strong>38 → 162</strong><br>+124억 (<span style="color:#059669;font-weight:700;">+326%</span>)</td></tr>
           <tr style="background:#fff3e0;"><td><strong style="color:#d35400;">Board</strong> <small style="color:#d35400;font-weight:600;">(독립 분리)</small> <small style="color:#64748b;">· 逆転オセロニア (역전 오셀로니아)</small></td><td class="num">16</td><td class="num dn">15</td><td class="num dn">13</td><td class="num dn">5</td><td class="num col26 up">15</td><td class="num up"><strong>28 → 35</strong><br>+7억 (<span style="color:#059669;font-weight:700;">+26%</span>)</td></tr>
-          <tr style="background:#f5f3ff;"><td><strong style="color:#8e44ad;">머지</strong> ⭐ <small style="color:#8e44ad;font-weight:600;">(통합)</small> <small style="color:#64748b;">· Gossip Harbor, Merge Mansion</small></td><td class="num">—</td><td class="num up">21</td><td class="num up">29</td><td class="num up">155</td><td class="num col26 up">269</td><td class="num up"><strong>26 → 178</strong><br>+152억 (<span style="color:#059669;font-weight:700;">+584%</span>)</td></tr>
-          <tr style="background:#f0fdf4;"><td><strong style="color:#27ae60;">방치형</strong> <small style="color:#27ae60;font-weight:600;">(통합)</small> <small style="color:#64748b;">· MementoMori, キノコ伝説 (24 피크 후 조정)</small></td><td class="num">39</td><td class="num up">175</td><td class="num up">372</td><td class="num dn">160</td><td class="num col26 dn">120</td><td class="num dn"><strong>260 → 152</strong><br>-108억 (<span style="color:#dc2626;font-weight:700;">-42%</span>)</td></tr>
+          <tr style="background:#f5f3ff;"><td><strong style="color:#8e44ad;">머지</strong> ⭐ <small style="color:#8e44ad;font-weight:600;">(통합)</small> <small style="color:#64748b;">· Gossip Harbor, Merge Mansion</small></td><td class="num">—</td><td class="num up">21</td><td class="num up">29</td><td class="num up">155</td><td class="num col26 up">269</td><td class="num up"><strong>17 → 178</strong><br>+161억 (<span style="color:#059669;font-weight:700;">+947%</span>)</td></tr>
+          <tr style="background:#f0fdf4;"><td><strong style="color:#27ae60;">방치형</strong> <small style="color:#27ae60;font-weight:600;">(통합)</small> <small style="color:#64748b;">· MementoMori, キノコ伝説 (24 피크 후 조정)</small></td><td class="num">39</td><td class="num up">175</td><td class="num up">372</td><td class="num dn">160</td><td class="num col26 dn">120</td><td class="num dn"><strong>195 → 152</strong><br>-43억 (<span style="color:#dc2626;font-weight:700;">-22%</span>)</td></tr>
           <tr><td><strong>Racing</strong> <small style="color:#64748b;">· Racing Master</small></td><td class="num">—</td><td class="num">—</td><td class="num up">23</td><td class="num up">24</td><td class="num col26 dn">5</td><td class="num dn"><strong>54 → 28</strong><br>-26억 (<span style="color:#dc2626;font-weight:700;">-49%</span>)</td></tr>
           <tr><td><strong>Family</strong> <small style="color:#64748b;">· ポケコロツイン, Sky: Children of the Light</small></td><td class="num">16</td><td class="num dn">4</td><td class="num">4</td><td class="num up">23</td><td class="num col26 up">25</td><td class="num dn"><strong>26 → 23</strong><br>-3억 (<span style="color:#dc2626;font-weight:700;">-10%</span>)</td></tr>
           <tr style="background:#fff3e0;"><td><strong>Casino(PvE)</strong> 🎰 <small style="color:#d35400;font-weight:600;">(lv2 통합)</small> <small style="color:#64748b;">· セガNET麻雀 MJ</small></td><td class="num">22</td><td class="num dn">16</td><td class="num up">20</td><td class="num up">22</td><td class="num col26 dn">19</td><td class="num up"><strong>22 → 23</strong><br>+1억 (<span style="color:#059669;font-weight:700;">+5%</span>)</td></tr>
@@ -5197,7 +5341,7 @@ function swNgTab(id) {
           <tr class="tot"><td>합계</td><td class="num">9,700</td><td class="num">9,062</td><td class="num">9,157</td><td class="num">9,058</td><td class="num col26">8,611</td><td class="num">-338억 (-4%)</td></tr>
         </tbody>
       </table>
-      <div class="ins"><strong>핵심 (재그룹화 v2):</strong> JP는 25년 전후 <strong>Role Playing -1,034억 + Adventure -346억 + Music -216억 + 방치형 -108억 = -1,704억 자국 IP·방치형 노후화</strong>가 시장 하락 주도. 반면 <strong>Arcade +432억 (Pokémon TCG Pocket) + Strategy +498억 (중화권 Survival) + Simulation +338억 (학원 아이돌마스터·SD건담) + 머지 +152억 + Card +130억 (Shadowverse Worlds Beyond·デュエマ) + Board +7억 = 1,557억</strong>이 부분 상쇄. v2로 <strong>CCG 카테고리가 Card 장르로 분리되면서 Shadowverse·デュエマ 등 CCG 신규 대세 장르가 독립 가시화</strong> (+298%). <strong>"자국 장수 IP·방치형 노후화 vs 중화권 Survival·포켓몬 TCG·아이돌마스터·머지·CCG 신흥 IP 성장의 정체 시장"</strong>.</div>
+      <div class="ins"><strong>핵심 (재그룹화 v2):</strong> JP는 25년 전후 <strong>Role Playing -1,034억 + Adventure -346억 + Music -216억 + 방치형 -43억 = -1,639억 자국 IP·방치형 노후화</strong>가 시장 하락 주도. 반면 <strong>Arcade +432억 (Pokémon TCG Pocket) + Strategy +498억 (중화권 Survival) + Simulation +338억 (학원 아이돌마스터·SD건담) + 머지 +161억 + Card +124억 (Shadowverse Worlds Beyond·デュエマ) + Board +7억 = 1,560억</strong>이 부분 상쇄. v2로 <strong>CCG 카테고리가 Card 장르로 분리되면서 Shadowverse·デュエマ 등 CCG 신규 대세 장르가 독립 가시화</strong> (+298%). <strong>"자국 장수 IP·방치형 노후화 vs 중화권 Survival·포켓몬 TCG·아이돌마스터·머지·CCG 신흥 IP 성장의 정체 시장"</strong>.</div>
       <div class="formula-box">
         <strong>📐 정의/공식 (v2 재그룹화 기준)</strong><br>
         • 장르 키 = <strong>lv2_genre 있으면 lv2 · 없으면 genre</strong> (JP 규칙)<br>
@@ -5512,8 +5656,8 @@ function swNgTab(id) {
 <div class="ctab-panel" id="us">
   <div class="headline us">
     <h2>🇺🇸 미국 시장: 월평균 매출 16,801억원 (22~24) → 19,736억원 (25~26.1Q) (+17%)</h2>
-    <p class="sub">25년 전후로 <strong>+2,936억(+17%) 대형 성장</strong>. <strong>중화권 +2,068억(+83%) 단독 메가 견인</strong>, 북미 자국은 <strong>-642억(-10%) 후퇴</strong> — 특히 <strong>북미 TOP 5(Scopely·Roblox·Product Madness·Niantic·Activision)는 -163억(-4%) 소폭 감소</strong>, <strong>북미 기타는 -480억(-20%) 대폭 감소</strong>로 중하위권 노후화가 심각. 기타(글로벌) <strong>+1,179억(+15%)</strong> · JP <strong>+294억(+86%)</strong> · KR <strong>+37억(+23%)</strong> 성장. <strong>"중화권 Survival·Puzzle 메가히트가 미국 시장 +17% 성장 단독 견인"</strong></p>
-    <p class="sub">25년 전후로 <strong>2,936억(+17%) 대형 성장</strong>. <strong>중화권 2,068억(+83%) 단독 메가 성장</strong> 주도, 기타(글로벌) 1,179억(+15%) 동반 확장. <strong>"중화권 Survival·Puzzle 메가히트가 미국 시장 +17% 성장 단독 견인"</strong></p>
+    <p class="sub">25년 전후로 <strong>+2,936억(+17%) 대형 성장</strong>. <strong>중화권 +2,116억(+86%) 단독 메가 견인</strong>, 북미 자국은 <strong>-557억(-9%) 후퇴</strong> — 특히 <strong>북미 TOP 5(Scopely·Roblox·Product Madness·Niantic·Activision)는 -163억(-4%) 소폭 감소</strong>, <strong>북미 기타는 -395억(-16%) 대폭 감소</strong>로 중하위권 노후화가 심각. 기타(글로벌) <strong>+1,046억(+14%)</strong> · JP <strong>+294억(+86%)</strong> · KR <strong>+37억(+23%)</strong> 성장. <strong>"중화권 Survival·Puzzle 메가히트가 미국 시장 +17% 성장 단독 견인"</strong></p>
+    <p class="sub">25년 전후로 <strong>2,936억(+17%) 대형 성장</strong>. <strong>중화권 2,116억(+86%) 단독 메가 성장</strong> 주도, 기타(글로벌) 1,046억(+14%) 동반 확장. <strong>"중화권 Survival·Puzzle 메가히트가 미국 시장 +17% 성장 단독 견인"</strong></p>
   </div>
 
   <!-- Step 1: MAU × ARPMAU (원인 분해) -->
@@ -5593,24 +5737,24 @@ function swNgTab(id) {
       <div class="step-num">2</div>
       <div class="step-info">
         <div class="step-q">퍼블리셔 국적별 월평균 매출 변화 <span style="font-size:0.7rem;color:#64748b;font-weight:500;">(매출 / 점유율 / 게임수)</span></div>
-        <div class="step-a">중화권 <span class="up">2,501 → 4,568억 (+2,068억, +83%)</span> 메가 성장 | 기타 <span class="up">+1,179억 (+15%)</span> | JP <span class="up">+294억 (+86%)</span> 신작 효과 | KR <span class="up">+37억 (+23%)</span> | 북미 <span class="dn">-642억 (-10%)</span></div>
+        <div class="step-a">중화권 <span class="up">2,457 → 4,573억 (+2,116억, +86%)</span> 메가 성장 | 기타 <span class="up">+1,046억 (+14%)</span> | JP <span class="up">+294억 (+86%)</span> 신작 효과 | KR <span class="up">+37억 (+23%)</span> | 북미 <span class="dn">-557억 (-9%)</span></div>
       </div>
     </div>
     <div class="step-body">
       <table>
         <thead><tr><th>퍼블리셔 국적</th><th class="num">'22</th><th class="num">'23</th><th class="num">'24</th><th class="num">'25</th><th class="num col26">'26.1Q</th><th class="num">25년 전후 변화 (월평균)<br><small style="color:#94a3b8;font-weight:400;">전 22~24 / 후 25~26.1Q</small></th></tr></thead>
         <tbody>
-          <tr class=""><td>기타 (글로벌)</td><td class="num">6,841억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">46.6%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">41게임</span></td><td class="num up">7,464억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">45.6%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">42게임</span></td><td class="num up">8,521억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">44.0%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">45게임</span></td><td class="num up">8,879억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">44.4%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">45게임</span></td><td class="num col26 dn">8,421억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">45.1%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">47게임</span></td><td class="num up"><strong>7,609억 → 8,787억</strong><br>+1179억 (+15%)</td></tr>
-          <tr class=""><td>북미</td><td class="num">5,067억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">34.5%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">36게임</span></td><td class="num up">6,174억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">37.7%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">35게임</span></td><td class="num up">7,325억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">37.8%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">33게임</span></td><td class="num dn">5,782억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">28.9%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">30게임</span></td><td class="num col26 dn">4,607억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">24.7%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">27게임</span></td><td class="num dn"><strong>6,189억 → 5,547억</strong><br>-642억 (-10%)</td></tr>
+          <tr class=""><td>기타 (글로벌)</td><td class="num">6,798억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">46.3%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">41게임</span></td><td class="num up">7,395억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">45.2%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">42게임</span></td><td class="num up">8,392억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">43.3%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">45게임</span></td><td class="num up">8,677억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">43.4%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">45게임</span></td><td class="num col26 dn">8,165억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">43.7%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">47게임</span></td><td class="num up"><strong>7,528억 → 8,575억</strong><br>+1046억 (+14%)</td></tr>
+          <tr class=""><td>북미</td><td class="num">5,144억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">35.0%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">36게임</span></td><td class="num up">6,322억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">38.7%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">35게임</span></td><td class="num up">7,473억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">38.6%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">33게임</span></td><td class="num dn">5,984억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">29.9%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">30게임</span></td><td class="num col26 dn">4,842억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">25.9%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">27게임</span></td><td class="num dn"><strong>6,313억 → 5,756억</strong><br>-557억 (-9%)</td></tr>
           <tr style="background:#f3e8ff;"><td style="padding-left:28px;font-size:0.72rem;background:#f3e8ff;font-weight:700;color:#6b21a8;">└ 북미 TOP 5 합산 (Scopely·Roblox·Product Madness·Niantic·Activision)</td><td class="num" style="font-size:0.7rem;color:#475569;">2,488억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">16.9%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">12.3게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">3,750억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">22.5%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">12.6게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">5,097억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">26.3%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">12.1게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">3,772억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">18.9%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">10.9게임</span></td><td class="num col26" style="font-size:0.7rem;color:#475569;">2,989억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">16.0%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">9.7게임</span></td><td class="num dn" style="font-size:0.7rem;"><strong>3,778 → 3,615</strong><br>-163억 (-4%)</td></tr>
-          <tr style="background:#f8fafc;"><td style="padding-left:28px;font-size:0.72rem;color:#64748b;background:#f8fafc;">└ 북미 기타 (TOP 5 외)</td><td class="num" style="font-size:0.7rem;color:#475569;">2,579억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">17.6%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">23.4게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,425억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">14.9%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">22.8게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,229억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">11.5%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">20.8게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,010억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">10.1%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">18.9게임</span></td><td class="num col26" style="font-size:0.7rem;color:#475569;">1,618억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">8.7%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">17.7게임</span></td><td class="num dn" style="font-size:0.7rem;"><strong>2,411 → 1,931</strong><br>-480억 (-20%)</td></tr>
-          <tr class=""><td>중화권 <span style="font-size:0.65rem;color:var(--amber);">(FUNFLY 포함)</span></td><td class="num">2,281억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">15.5%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">20게임</span></td><td class="num dn">2,249억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">13.8%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">21게임</span></td><td class="num up">2,972억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">15.4%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">21게임</span></td><td class="num up">4,458억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">22.3%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">21게임</span></td><td class="num col26 up">5,010억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">26.8%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">26게임</span></td><td class="num up"><strong>2,501억 → 4,568억</strong><br>+2068억 (+83%)</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding-left:28px;font-size:0.72rem;color:#64748b;background:#f8fafc;">└ 북미 기타 (TOP 5 외)</td><td class="num" style="font-size:0.7rem;color:#475569;">2,656억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">18.1%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">23.4게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,573억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">15.7%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">22.8게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,377억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">12.3%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">20.8게임</span></td><td class="num" style="font-size:0.7rem;color:#475569;">2,212억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">11.1%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">18.9게임</span></td><td class="num col26" style="font-size:0.7rem;color:#475569;">1,853억<br><span style="color:#94a3b8;font-weight:400;font-size:0.65rem;">9.9%</span><br><span style="color:#cbd5e1;font-weight:400;font-size:0.6rem;">17.7게임</span></td><td class="num dn" style="font-size:0.7rem;"><strong>2,535 → 2,140</strong><br>-395억 (-16%)</td></tr>
+          <tr class=""><td>중화권 <span style="font-size:0.65rem;color:var(--amber);">(FUNFLY 포함)</span></td><td class="num">2,247억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">15.3%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">20게임</span></td><td class="num dn">2,170억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">13.3%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">21게임</span></td><td class="num up">2,953억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">15.3%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">21게임</span></td><td class="num up">4,458억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">22.3%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">21게임</span></td><td class="num col26 up">5,031억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">26.9%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">26게임</span></td><td class="num up"><strong>2,457억 → 4,573억</strong><br>+2116억 (+86%)</td></tr>
           <tr class=""><td>일본</td><td class="num">301억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">2.0%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">3게임</span></td><td class="num up">332억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">2.0%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">3게임</span></td><td class="num up">397억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">2.1%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">2게임</span></td><td class="num up">675억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">3.4%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">4게임</span></td><td class="num col26 dn">487억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">2.6%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">4게임</span></td><td class="num up"><strong>343억 → 637억</strong><br>+294억 (+86%)</td></tr>
           <tr class="nhn"><td class="nhn">한국 (KR)</td><td class="num">198억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">1.3%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">3게임</span></td><td class="num dn">136억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">0.8%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">2게임</span></td><td class="num up">144억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">0.7%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">2게임</span></td><td class="num up">205억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">1.0%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">2게임</span></td><td class="num col26 dn">161억<br><span style="color:#334155;font-weight:500;font-size:0.72rem;">0.9%</span><br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">2게임</span></td><td class="num up"><strong>159억 → 196억</strong><br>+37억 (+23%)</td></tr>
           <tr class="tot"><td>합계</td><td class="num">14,688억<br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">103게임</span></td><td class="num">16,355억<br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">103게임</span></td><td class="num">19,359억<br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">103게임</span></td><td class="num">19,999억<br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">102게임</span></td><td class="num col26">18,686억<br><span style="color:#64748b;font-weight:400;font-size:0.68rem;">106게임</span></td><td class="num up"><strong>16,801억 → 19,736억</strong><br>+2936억 (+17%)</td></tr>
         </tbody>
       </table>
-      <div class="ins"><strong>핵심:</strong> 25년 전후로 미국 시장 <strong>2,936억(+17%) 대형 성장</strong>. <strong>중화권 2,068억(+83%)이 단독 메가 견인</strong>하며 점유율 14.9%→23.1% (+8.2%p)로 폭발적 확장. <strong>북미 자국 퍼블은 -642억(-10%) 후퇴</strong>로 점유율 36.9%→28.1%(-8.8%p). <strong>북미 내부 breakdown — 북미 TOP 5는 3,778 → 3,615억(-163억, -4%)</strong>로 완만 감소(Scopely 성장 vs Roblox 하락 상쇄), <strong>북미 기타는 2,411 → 1,931억(-480억, -20%)</strong>으로 중하위권 감소폭이 더 큼. 기타(글로벌) 1,179·JP 294·KR 37억까지 모두 성장 — NHN/KR 퍼블은 절대 매출 +23% 성장했으나 시장 +17% 성장에 부분 연동. <strong>"중화권 Survival·Puzzle 메가히트가 미국 시장 +17% 성장 단독 견인"</strong>.</div>
+      <div class="ins"><strong>핵심:</strong> 25년 전후로 미국 시장 <strong>2,936억(+17%) 대형 성장</strong>. <strong>중화권 2,116억(+86%)이 단독 메가 견인</strong>하며 점유율 14.6%→23.2% (+8.6%p)로 폭발적 확장. <strong>북미 자국 퍼블은 -557억(-9%) 후퇴</strong>로 점유율 37.6%→29.2%(-8.4%p). <strong>북미 내부 breakdown — 북미 TOP 5는 3,778 → 3,615억(-163억, -4%)</strong>로 완만 감소(Scopely 성장 vs Roblox 하락 상쇄), <strong>북미 기타는 2,535 → 2,140억(-395억, -16%)</strong>으로 중하위권 감소폭이 더 큼. 기타(글로벌) 1,046·JP 294·KR 37억까지 모두 성장 — NHN/KR 퍼블은 절대 매출 +23% 성장했으나 시장 +17% 성장에 부분 연동. <strong>"중화권 Survival·Puzzle 메가히트가 미국 시장 +17% 성장 단독 견인"</strong>.</div>
       <div class="formula-box">
         <strong>📐 정의/공식</strong><br>
         • 월평균 매출 = SUM(revenue_usd_100p × 연도별 평균환율) / 해당 시점 월수 <strong>(수수료 포함 스토어 Gross Revenue)</strong><br>
