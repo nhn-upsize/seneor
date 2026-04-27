@@ -1,0 +1,34 @@
+# Credentials / env
+.env
+.env.*
+
+# Cache / build
+.cache/
+__pycache__/
+*.pyc
+*.pyo
+
+# Data (Sensor Tower licensed — do not commit)
+data/
+data_raw/
+output/
+reports/
+archives/
+archive/
+slides/
+
+# Node
+node_modules/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Excel / large dumps
+*.xlsx
+*.xls
+*.csv
+한국게임사_*.json
