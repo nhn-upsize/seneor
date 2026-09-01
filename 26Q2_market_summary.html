@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>26년 상반기 시장 변화 — 1Q→2Q 흐름 분석</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#eef0f4;color:#1e293b;font-size:14px;line-height:1.85}
+
+/* ── 헤더 ── */
+.page-header{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);padding:28px 48px 22px;color:#fff}
+.page-header h1{font-size:1.4rem;font-weight:900;margin-bottom:4px}
+.page-header .meta{font-size:0.67rem;color:#94a3b8}
+.q-badges{display:flex;gap:8px;margin-top:12px}
+.badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:0.67rem;font-weight:700}
+.b1{background:#dbeafe;color:#1d4ed8}.b2{background:#fee2e2;color:#b91c1c}
+
+/* ── 탭 바 ── */
+.tab-bar{position:sticky;top:0;z-index:99;background:#fff;display:flex;gap:0;border-bottom:2px solid #e2e8f0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.tab-btn{padding:13px 32px;font-size:0.85rem;font-weight:700;color:#94a3b8;border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab-btn:hover{color:#475569}
+.tab-btn.active.kr{color:#1d4ed8;border-bottom-color:#2563eb}
+.tab-btn.active.jp{color:#b91c1c;border-bottom-color:#dc2626}
+.tab-btn.active.us{color:#6d28d9;border-bottom-color:#7c3aed}
+
+/* ── 본문 ── */
+.page{max-width:1600px;margin:0 auto;padding:32px 32px 80px}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* ── KPI 헤더 ── */
+.country-kpi{display:flex;gap:12px;margin-bottom:28px;padding:18px 22px;background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.kpi-item{flex:1;text-align:center;padding:0 12px;border-right:1px solid #f1f5f9}
+.kpi-item:last-child{border-right:none}
+.kpi-label{font-size:0.63rem;color:#94a3b8;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
+.kpi-val{font-size:1.1rem;font-weight:900;color:#0f172a}
+.kpi-val.dn{color:#dc2626}.kpi-val.up{color:#16a34a}.kpi-val.neu{color:#d97706}
+.kpi-chg{font-size:0.72rem;font-weight:700;margin-top:1px}
+.kpi-chg.dn{color:#dc2626}.kpi-chg.up{color:#16a34a}.kpi-chg.neu{color:#d97706}
+
+/* ── 섹션 블록 ── */
+.sec{margin-bottom:36px}
+.sec-summary{padding:11px 16px;background:#fff;border-radius:8px;border-left:4px solid #cbd5e1;
+  font-size:0.85rem;color:#334155;font-weight:500;margin-bottom:12px;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);line-height:1.7}
+.sec-summary.dn{border-left-color:#dc2626}
+.sec-summary.up{border-left-color:#16a34a}
+.sec-summary.neu{border-left-color:#f59e0b}
+.sec-summary.info{border-left-color:#6366f1}
+.sec-summary.mix{border-left-color:#8b5cf6}
+.sec-num{font-size:0.82rem;font-weight:800;letter-spacing:.06em;color:#94a3b8;text-transform:uppercase;margin-bottom:6px}
+.sec-toggle{cursor:pointer;user-select:none}
+.sec-toggle:hover{color:#64748b}
+.toggle-hint{font-size:0.75rem;font-weight:600;color:#3b82f6;margin-left:8px;letter-spacing:0}
+span.r{color:#dc2626;font-weight:700}
+span.g{color:#16a34a;font-weight:700}
+span.y{color:#d97706;font-weight:700}
+span.b{color:#2563eb;font-weight:700}
+span.hi{font-weight:700;color:#0f172a}
+
+/* ── 차트 카드 ── */
+.chart-card{background:#fff;border-radius:12px;padding:16px 20px 14px;box-shadow:0 1px 3px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.05)}
+.chart-title{font-size:0.78rem;font-weight:700;letter-spacing:.05em;color:#94a3b8;text-transform:uppercase;margin-bottom:12px}
+.ch{position:relative;width:min(100%,480px);aspect-ratio:3/2;margin:0 auto}
+.ch canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important}
+.ch.wide{width:min(100%,720px)}
+.ch.mid{width:min(100%,700px)}
+.ch-full{position:relative;width:100%;height:300px}
+.ch-full canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important}
+
+/* 3열 차트 그리드 */
+.chart-row3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:4px}
+.chart-row3 .ch{width:100%}
+.chart-row4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:4px}
+.chart-row4 .ch{width:100%}
+
+/* ── 테이블 ── */
+.tbl{width:100%;border-collapse:collapse;font-size:0.7rem}
+.tbl th{padding:4px 3px;background:#f8fafc;font-weight:700;color:#475569;border-bottom:2px solid #e2e8f0;text-align:right;white-space:nowrap;font-size:0.60rem}
+.tbl th:first-child{text-align:left}
+.tbl td{padding:2px 3px;border-bottom:1px solid #f1f5f9;text-align:right;font-size:0.60rem}
+.tbl td:first-child{text-align:left;font-weight:600}
+.tbl .cq1{background:#eff6ff;color:#1d4ed8;font-weight:700}
+.tbl .cq2{background:#fef2f2;color:#b91c1c;font-weight:700}
+.tbl .cchg{background:#fffbeb;font-weight:800}
+.tbl .pos{color:#15803d;font-weight:700}
+.tbl .neg{color:#dc2626;font-weight:700}
+.tbl tr:hover td{background:#fafafa}
+
+/* 배지 */
+.tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:0.63rem;font-weight:700;margin-right:3px}
+.tag.kr{background:#dbeafe;color:#1d4ed8}
+.tag.jp{background:#fee2e2;color:#b91c1c}
+.tag.cn{background:#fef3c7;color:#92400e}
+.tag.us{background:#ede9fe;color:#6d28d9}
+.tag.etc{background:#f1f5f9;color:#64748b}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>26년 상반기 — 1Q 하락 흐름은 2Q에도 이어졌나</h1>
+  <div class="meta">KR · JP · US &nbsp;/&nbsp; iOS+Android 통합 TOP100 &nbsp;/&nbsp; 센서타워 100% 보정 + 연도별 환율 적용 &nbsp;/&nbsp; 2026-07-14</div>
+  <div class="q-badges">
+    <span class="badge b1">◀ 26.1Q (1~3월)</span>
+    <span class="badge b2">26.2Q (4~6월) ▶</span>
+  </div>
+  <div style="margin-top:14px;padding:10px 14px;background:rgba(255,255,255,0.08);border-left:3px solid #60a5fa;border-radius:4px;font-size:0.72rem;color:#cbd5e1;line-height:1.8">
+    <b style="color:#93c5fd">📐 집계 기준</b> &nbsp;·&nbsp;
+    <b style="color:#7dd3fc">매출 TOP 100 = iOS+Android 통합(unified_os) 기준</b> &nbsp;·&nbsp;
+    Q1 = 1~3월 월평균 / Q2 = 4~6월 월평균 &nbsp;·&nbsp;
+    <b>분기 중 출시 게임</b>은 진입월부터 평균 산정 (예: 3월 출시 시 Q1 = 3월 단월 기준) &nbsp;·&nbsp;
+    변화액 = Q2 avg − Q1 avg &nbsp;·&nbsp;
+    퍼블리셔 국적: NEXON→KR / FUNFLY→중화권 강제 적용
+  </div>
+  <div style="margin-top:8px;padding:10px 14px;background:rgba(255,255,255,0.08);border-left:3px solid #a78bfa;border-radius:4px;font-size:0.72rem;color:#cbd5e1;line-height:1.8">
+    <b style="color:#c4b5fd">📊 추이 차트 항목 선택 기준</b> &nbsp;·&nbsp;
+    <b>Q2 매출 상위 5개</b> + <b>QoQ 감소 상위 3개</b> + <b>QoQ 증가 상위 3개</b>의 합집합 (중복 제거, 통상 7~10개) &nbsp;·&nbsp;
+    요약 텍스트는 추이 차트에 포함된 항목만 언급
+  </div>
+  <div style="margin-top:8px;padding:10px 14px;background:rgba(255,255,255,0.08);border-left:3px solid #fbbf24;border-radius:4px;font-size:0.72rem;color:#cbd5e1;line-height:1.85">
+    <b style="color:#fde68a">⚠️ '진입월부터 평균' 규칙, 게임 1개 볼 때만 적용됩니다</b><br>
+    ① <b>게임 1개만 볼 때</b> (⑤ 대표게임별 등): 3월에 출시했다면 Q1 평균 = <b>3월 매출 그대로</b> (÷3 안 함)<br>
+    ② <b>장르·퍼블리셔 등 여러 게임을 합친 카테고리 합계</b>: 그 안에 5월 신규 게임이 있어도 카테고리 Q2 평균 = <b>(4월+5월+6월 카테고리 전체 매출)÷3</b> 그대로 — 신규 게임은 4월엔 매출 0으로 자연스럽게 포함될 뿐, 게임별로 평균 낸 뒤 합치면 안 됨<br>
+    <span style="color:#94a3b8">→ ②처럼 계산해야 장르별 매출을 다 더한 값이 국가 전체 매출과 정확히 일치합니다. 게임별 평균을 먼저 낸 뒤 합치면(①방식을 카테고리에 잘못 적용) 숫자가 부풀어 전체 매출과 안 맞게 됩니다.</span>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active kr" onclick="showTab('kr',this)">🇰🇷 KR 한국</button>
+  <button class="tab-btn jp" onclick="showTab('jp',this)">🇯🇵 JP 일본</button>
+  <button class="tab-btn us" onclick="showTab('us',this)">🇺🇸 US 미국</button>
+</div>
+
+<div class="page">
+
+<!-- ═══════════════════════════ KR ═══════════════════════════ -->
+<div id="tab-kr" class="tab-content active">
+
+  <div class="country-kpi">
+    <div class="kpi-item"><div class="kpi-label">총매출 1Q</div><div class="kpi-val">4,071억</div></div>
+    <div class="kpi-item"><div class="kpi-label">총매출 2Q</div><div class="kpi-val neu">4,037억</div><div class="kpi-chg neu">-0.8%</div></div>
+    <div class="kpi-item"><div class="kpi-label">MAU 1Q</div><div class="kpi-val">3,599만</div></div>
+    <div class="kpi-item"><div class="kpi-label">MAU 2Q</div><div class="kpi-val dn">3,264만</div><div class="kpi-chg dn">-9.3%</div></div>
+    <div class="kpi-item"><div class="kpi-label">DL 1Q</div><div class="kpi-val">497만건</div></div>
+    <div class="kpi-item"><div class="kpi-label">DL 2Q</div><div class="kpi-val dn">389만건</div><div class="kpi-chg dn">-21.6%</div></div>
+    <div class="kpi-item"><div class="kpi-label">중화권 점유</div><div class="kpi-val">34.1%</div><div class="kpi-chg dn">→ 37.1%</div></div>
+  </div>
+
+  <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;margin:10px 0 4px;font-size:.78rem;color:#374151;line-height:1.9">
+    <b>2Q 주요 변화 원인</b><br>
+    📉 방치형 출시 효과 종료 — 방치형 장르 <b style="color:#dc2626">-273억</b><span style="color:#6b7280;font-size:.75em">(595억→322억)</span> (<b>MapleStory Idle, StoneAge</b><span style="color:#6b7280;font-size:.75em">(3월 출시, 1Q=3월 단월)</span> 감소)
+  </div>
+
+  <!-- S1 매출 원인 분해 -->
+  <div class="sec">
+    <div class="sec-num">① 매출 변화원인 분해 <span style="font-size:.7rem;font-weight:400;color:#6b7280">(26년 1Q 대비 2Q)</span></div>
+    <div class="sec-summary neu">매출 <span class="hi">-0.8%</span> · MAU <span class="r">-9.3%</span> · 다운로드 <span class="r">-21.6%</span> — ARPMAU 1Q 1.1만원 → 2Q 1.2만원 (<span class="g">+9%</span>)</div>
+    <div class="chart-card">
+      <div class="chart-title">총매출 · MAU · 다운로드 · ARPMAU 추이 — 연평균 '22~'25 + 26년 월별</div>
+      <div class="chart-row4">
+        <div><div style="font-size:.65rem;font-weight:700;color:#64748b;margin-bottom:6px">총매출 (억원)</div><div class="ch"><canvas id="kr_rev"></canvas></div></div>
+        <div><div style="font-size:.65rem;font-weight:700;color:#64748b;margin-bottom:6px">MAU (만명)</div><div class="ch"><canvas id="kr_mau"></canvas></div></div>
+        <div><div style="font-size:.65rem;font-weight:700;color:#64748b;margin-bottom:6px">다운로드 (만건)</div><div class="ch"><canvas id="kr_dl"></canvas></div></div>
+        <div><div style="font-size:.65rem;font-weight:700;color:#64748b;margin-bottom:6px">ARPMAU (만원)</div><div class="ch"><canvas id="kr_arpmau"></canvas></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2 퍼블리셔 국적별 -->
+  <div class="sec">
+    <div class="sec-num">② 퍼블리셔 국적별 월평균 매출 변화</div>
+    <div class="sec-summary info">KR TOP5 매출 <span class="r"><b>▼15%(-220억)</b></span> · 중화권 매출 <span class="g"><b>▲8%(+110억)</b></span> · KR 기타 매출 <span class="g"><b>▲12%(+58억)</b></span> — 중화권 점유 <b>34.1%→37.1%</b></div>
+    <div class="chart-card">
+      <div class="chart-title">퍼블리셔 국적별 매출 비중 추이 (%)</div>
+      <div class="ch wide"><canvas id="kr_pub"></canvas></div>
+      <div class="chart-title" style="margin-top:14px">퍼블리셔 국적별 실제 매출 추이 (억원)</div>
+      <div style="overflow-x:auto;margin-top:6px;display:flex;justify-content:center">
+        <table class="tbl" style="width:780px;white-space:nowrap">
+          <thead><tr><th>퍼블리셔 국적</th><th>'22</th><th>'23</th><th>'24</th><th>'25</th><th class="cq1">01월</th><th class="cq1">02월</th><th class="cq1">03월</th><th class="cq2">04월</th><th class="cq2">05월</th><th class="cq2">06월</th><th class="cchg">QoQ</th></tr></thead>
+          <tbody>
+            <tr><td><b>KR TOP5</b></td><td>2,122</td><td>1,956</td><td>1,610</td><td>1,843</td><td class="cq1">1,565</td><td class="cq1">1,376</td><td class="cq1">1,468</td><td class="cq2">1,208</td><td class="cq2">1,197</td><td class="cq2">1,343</td><td class="cchg neg">▼15% (-220억)</td></tr>
+            <tr><td><b>KR 기타</b></td><td>444</td><td>591</td><td>663</td><td>562</td><td class="cq1">506</td><td class="cq1">486</td><td class="cq1">491</td><td class="cq2">539</td><td class="cq2">582</td><td class="cq2">535</td><td class="cchg pos">▲12% (+58억)</td></tr>
+            <tr><td><b>중화권</b></td><td>847</td><td>1,033</td><td>1,619</td><td>1,775</td><td class="cq1">1,441</td><td class="cq1">1,413</td><td class="cq1">1,314</td><td class="cq2">1,514</td><td class="cq2">1,640</td><td class="cq2">1,345</td><td class="cchg pos">▲8% (+110억)</td></tr>
+            <tr><td><b>북미</b></td><td>148</td><td>129</td><td>134</td><td>185</td><td class="cq1">171</td><td class="cq1">178</td><td class="cq1">112</td><td class="cq2">115</td><td class="cq2">195</td><td class="cq2">110</td><td class="cchg neg">▼9% (-14억)</td></tr>
+            <tr><td><b>JP</b></td><td>58</td><td>30</td><td>59</td><td>76</td><td class="cq1">62</td><td class="cq1">75</td><td class="cq1">40</td><td class="cq2">80</td><td class="cq2">60</td><td class="cq2">57</td><td class="cchg pos">▲10% (+7억)</td></tr>
+            <tr><td><b>기타</b></td><td>216</td><td>264</td><td>403</td><td>359</td><td class="cq1">569</td><td class="cq1">483</td><td class="cq1">463</td><td class="cq2">482</td><td class="cq2">592</td><td class="cq2">519</td><td class="cchg pos">▲5% (+26억)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 장르별 -->
+  <div class="sec">
+    <div class="sec-num">③ 장르별 월평균 매출 변화</div>
+    <div class="sec-summary mix"><b>방치형</b> <span class="r"><b>▼46%(-273억)</b></span> · <b>Sports</b> <span class="r"><b>▼13%(-27억)</b></span> 감소 속 <b>비MMORPG</b> <span class="g"><b>▲29%(+130억)</b></span> · <b>Casual</b> <span class="g"><b>▲54%(+40억)</b></span> 성장 <span style="color:#6b7280;font-size:.85em">(MMORPG는 SOL:enchant 신규 +205억이 기존게임 감소로 대부분 상쇄돼 ▲1%(+9억) 그침)</span></div>
+    <div class="chart-card">
+      <div class="chart-title">장르별 매출 추이 ('22~'25 연평균 + 26년 월별, 억원)</div>
+      <div class="ch mid"><canvas id="kr_genre_trend"></canvas></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div class="chart-card">
+        <div class="chart-title">장르별 1Q→2Q QoQ (%)</div>
+        <div class="ch-full"><canvas id="kr_genre"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">장르별 실제 변화액 (억원/월, 1Q→2Q)</div>
+        <div class="ch-full"><canvas id="kr_genre_amt"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4 퍼블리셔 × 장르 -->
+  <div class="sec">
+    <div class="sec-num">④ 퍼블리셔 국적 × 장르 매출 변화</div>
+    <div class="sec-summary dn"><b>KR 방치형</b> <span class="r"><b>▼267억</b></span> · <b>기타 Strategy</b> <span class="r"><b>▼69억</b></span> 감소 속 <b>중화권 비MMORPG</b> <span class="g"><b>▲67억</b></span> · <b>중화권 머지</b> <span class="g"><b>▲43억</b></span>으로 부분 상쇄</div>
+    <div class="chart-card">
+      <div class="chart-title">주요 조합 매출 추이 ('22~'25 연평균 + 26년 월별, 억원)</div>
+      <div class="ch mid"><canvas id="kr_pubgenre_trend"></canvas></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div class="chart-card">
+        <div class="chart-title">퍼블리셔 국적 × 장르 — 1Q→2Q QoQ (%)</div>
+        <div class="ch-full"><canvas id="kr_pubgenre"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">퍼블리셔 국적 × 장르 — 실제 변화액 (억원/월, 1Q→2Q)</div>
+        <div class="ch-full"><canvas id="kr_pubgenre_amt"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S5 대표 게임 증감 -->
+  <div class="sec">
+    <div class="sec-num">⑤ 대표 게임별 증감</div>
+    <div class="sec-summary dn"><b>MapleStory Idle</b> <span class="r"><b>▼239억</b></span> · <b>StoneAge</b> <span class="r"><b>▼125억</b></span><span style="color:#6b7280;font-size:.85em">(3월 출시,1Q=1개월)</span> · <b>Last War</b> <span class="r"><b>▼73억</b></span> 감소 속 <b>SOL:enchant</b> <span class="g"><b>▲205억</b></span><span style="color:#6b7280;font-size:.85em">(6월 신규,1개월)</span> · <b>Kingshot</b> <span class="g"><b>▲77억</b></span> · <b>NIKKE</b> <span class="g"><b>▲68억</b></span>이 일부 보완</div>
+    <div class="chart-card">
+      <div class="chart-title">대표 게임 매출 추이 ('22~'25 연평균 + 26년 월별, 억원)</div>
+      <div class="ch mid"><canvas id="kr_game_trend"></canvas></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div class="chart-card">
+        <div class="chart-title">게임별 1Q→2Q QoQ (%)</div>
+        <div style="position:relative;height:300px;width:100%"><canvas id="kr_game"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">게임별 실제 변화액 (억원/월, 1Q→2Q)</div>
+        <div style="position:relative;height:300px;width:100%"><canvas id="kr_game_amt"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S6 자국 퍼블리셔 -->
+  <div class="sec">
+    <div class="sec-num">⑥ 자국 퍼블리셔 매출 추이 & 변화원인</div>
+    <div class="sec-summary mix"><b>NEXON</b> <span class="r"><b>▼320억(-42%)</b></span> 급감 속 <b>Netmarble</b> SOL:enchant <span class="g"><b>▲205억</b></span><span style="color:#6b7280;font-size:.85em">(6월 신규,1개월)</span> · <b>NC</b> 리니지M <span class="g"><b>▲33억(+16%)</b></span> 반등 — <b>NHN</b> <span class="g"><b>▲19%</b></span> · <b>111%</b> <span class="g"><b>▲43%</b></span> 성장세 지속</div>
+    <div class="chart-card">
+      <div class="chart-title">KR 자국 퍼블리셔 매출 추이 ('22~'25 연평균 + 26년 월별, 억원)</div>
+      <div class="ch wide"><canvas id="kr_pub_trend"></canvas></div>
+      <div style="overflow-x:auto;margin-top:10px;display:flex;justify-content:center">
+          <table class="tbl" style="width:780px;white-space:nowrap">
+            <thead><tr><th>퍼블리셔</th><th>'22</th><th>'23</th><th>'24</th><th>'25</th><th class="cq1">01월</th><th class="cq1">02월</th><th class="cq1">03월</th><th class="cq2">04월</th><th class="cq2">05월</th><th class="cq2">06월</th><th class="cchg">QoQ</th></tr></thead>
+            <tbody>
+              <tr><td><b>NEXON</b></td><td>484</td><td>451</td><td>253</td><td>473</td><td class="cq1">900</td><td class="cq1">709</td><td class="cq1">669</td><td class="cq2">435</td><td class="cq2">454</td><td class="cq2">427</td><td class="cchg neg">▼42%</td></tr>
+              <tr><td><b>NC</b></td><td>973</td><td>767</td><td>729</td><td>603</td><td class="cq1">323</td><td class="cq1">296</td><td class="cq1">324</td><td class="cq2">330</td><td class="cq2">338</td><td class="cq2">288</td><td class="cchg pos">▲1%</td></tr>
+              <tr><td><b>Netmarble</b></td><td>214</td><td>197</td><td>214</td><td>463</td><td class="cq1">128</td><td class="cq1">129</td><td class="cq1">248</td><td class="cq2">211</td><td class="cq2">161</td><td class="cq2">319</td><td class="cchg pos">▲37%</td></tr>
+              <tr><td><b>NHN</b></td><td>86</td><td>112</td><td>123</td><td>129</td><td class="cq1">117</td><td class="cq1">140</td><td class="cq1">147</td><td class="cq2">154</td><td class="cq2">176</td><td class="cq2">151</td><td class="cchg pos">▲19%</td></tr>
+              <tr><td><b>Kakao</b></td><td>365</td><td>430</td><td>290</td><td>175</td><td class="cq1">97</td><td class="cq1">102</td><td class="cq1">80</td><td class="cq2">78</td><td class="cq2">68</td><td class="cq2">158</td><td class="cchg pos">▲9%</td></tr>
+              <tr><td><b>Com2uS</b></td><td>57</td><td>77</td><td>102</td><td>79</td><td class="cq1">72</td><td class="cq1">73</td><td class="cq1">81</td><td class="cq2">95</td><td class="cq2">106</td><td class="cq2">81</td><td class="cchg pos">▲25%</td></tr>
+              <tr><td><b>111%</b></td><td>12</td><td>—</td><td>105</td><td>67</td><td class="cq1">65</td><td class="cq1">65</td><td class="cq1">72</td><td class="cq2">88</td><td class="cq2">101</td><td class="cq2">99</td><td class="cchg pos">▲43%</td></tr>
+              <tr><td><b>KRAFTON</b></td><td>31</td><td>31</td><td>35</td><td>38</td><td class="cq1">39</td><td class="cq1">43</td><td class="cq1">38</td><td class="cq2">35</td><td class="cq2">31</td><td class="cq2">29</td><td class="cchg neg">▼21%</td></tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+    <div class="chart-card" style="margin-top:8px">
+      <div style="display:flex;gap:12px">
+        <div style="flex:1;min-width:0">
+          <div class="chart-title">퍼블리셔별 주요 게임 QoQ %</div>
+          <div style="position:relative;height:340px"><canvas id="kr_pub_game"></canvas></div>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="chart-title">퍼블리셔별 주요 게임 변화액 (억원)</div>
+          <div style="position:relative;height:340px"><canvas id="kr_pub_game_amt"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-kr -->
+
+<!-- ═══════════════════════════ JP ═══════════════════════════ -->
+<div id="tab-jp" class="tab-content">
+
+  <div class="country-kpi">
+    <div class="kpi-item"><div class="kpi-label">총매출 1Q</div><div class="kpi-val">8,611억</div></div>
+    <div class="kpi-item"><div class="kpi-label">총매출 2Q</div><div class="kpi-val dn">8,041억</div><div class="kpi-chg dn">-6.6%</div></div>
+    <div class="kpi-item"><div class="kpi-label">MAU 1Q</div><div class="kpi-val">8,465만</div></div>
+    <div class="kpi-item"><div class="kpi-label">MAU 2Q</div><div class="kpi-val dn">8,105만</div><div class="kpi-chg dn">-4.3%</div></div>
+    <div class="kpi-item"><div class="kpi-label">DL 1Q</div><div class="kpi-val">726만건</div></div>
+    <div class="kpi-item"><div class="kpi-label">DL 2Q</div><div class="kpi-val dn">643만건</div><div class="kpi-chg dn">-11.4%</div></div>
+    <div class="kpi-item"><div class="kpi-label">중화권 점유</div><div class="kpi-val">33.9%</div><div class="kpi-chg dn">→ 35.3%</div></div>
+  </div>
+
+  <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;margin:10px 0 4px;font-size:.78rem;color:#374151;line-height:1.9">
+    <b>2Q 주요 변화 원인</b><br>
+    📉 대형 IP 동반 감소 — <b>우마무스메 <span style="color:#dc2626">-192억</span> · 드래곤볼Z <span style="color:#dc2626">-163억</span> · 프야스A <span style="color:#dc2626">-117억</span></b>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">① 매출 변화원인 분해 <span style="font-size:.7rem;font-weight:400;color:#6b7280">(26년 1Q 대비 2Q)</span></div>
+    <div class="sec-summary dn">매출 <span class="r">-6.6%</span> · MAU <span class="r">-4.3%</span> · 다운로드 <span class="r">-11.4%</span></div>
+    <div class="chart-card">
+      <div class="chart-title">총매출 · MAU · 다운로드 · ARPMAU 추이</div>
+      <div class="chart-row4">
+        <div><div style="font-size:.65rem;font-weight:700;color:#64748b;margin-bottom:6px">총매출 (억원)</div><div class="ch"><canvas id="jp_rev"></canvas></div></div>
+        <div><div style="font-size:.65rem;font-weight:700;color:#64748b;margin-bottom:6px">MAU (만명)</div><div class="ch"><canvas id="jp_mau"></canvas></div></div>
+        <div><div style="font-size:.65rem;font-weight:700;color:#64748b;margin-bottom:6px">다운로드 (만건)</div><div class="ch"><canvas id="jp_dl"></canvas></div></div>
+        <div><div style="font-size:.65rem;font-weight:700;color:#64748b;margin-bottom:6px">ARPMAU (만원)</div><div class="ch"><canvas id="jp_arpmau"></canvas></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">② 퍼블리셔 국적별 월평균 매출 변화</div>
+    <div class="sec-summary dn">JP 자국 매출 <span class="r"><b>▼13%(-564억)</b></span> 전반 감소<span style="color:#6b7280;font-size:.85em">(TOP5 ▼18%·기타 ▼6%)</span> · KR 매출 <span class="g"><b>▲62%(+47억)</b></span> 반등 — 중화권 점유 <b>33.9%→35.3%</b></div>
+    <div class="chart-card">
+      <div class="chart-title">퍼블리셔 국적별 매출 비중 추이 (%)</div>
+      <div class="ch wide"><canvas id="jp_pub"></canvas></div>
+      <div class="chart-title" style="margin-top:14px">퍼블리셔 국적별 실제 매출 추이 (억원)</div>
+      <div style="overflow-x:auto;margin-top:6px;display:flex;justify-content:center">
+        <table class="tbl" style="width:780px;white-space:nowrap">
+          <thead><tr><th>퍼블리셔 국적</th><th>'22</th><th>'23</th><th>'24</th><th>'25</th><th class="cq1">01월</th><th class="cq1">02월</th><th class="cq1">03월</th><th class="cq2">04월</th><th class="cq2">05월</th><th class="cq2">06월</th><th class="cchg">QoQ</th></tr></thead>
+          <tbody>
+            <tr><td><b>JP TOP5</b></td><td>3,633</td><td>3,139</td><td>2,744</td><td>2,712</td><td class="cq1">3,074</td><td class="cq1">2,113</td><td class="cq1">2,519</td><td class="cq2">2,161</td><td class="cq2">2,173</td><td class="cq2">2,004</td><td class="cchg neg">▼18% (-456억)</td></tr>
+            <tr><td><b>JP 기타</b></td><td>2,468</td><td>2,444</td><td>2,294</td><td>2,240</td><td class="cq1">2,089</td><td class="cq1">1,755</td><td class="cq1">1,753</td><td class="cq2">1,708</td><td class="cq2">1,947</td><td class="cq2">1,620</td><td class="cchg neg">▼6% (-108억)</td></tr>
+            <tr><td><b>중화권</b></td><td>2,511</td><td>2,421</td><td>2,938</td><td>2,920</td><td class="cq1">3,056</td><td class="cq1">2,973</td><td class="cq1">2,717</td><td class="cq2">2,895</td><td class="cq2">2,864</td><td class="cq2">2,739</td><td class="cchg neg">▼3% (-83억)</td></tr>
+            <tr><td><b>KR</b></td><td>296</td><td>187</td><td>151</td><td>114</td><td class="cq1">98</td><td class="cq1">52</td><td class="cq1">77</td><td class="cq2">112</td><td class="cq2">147</td><td class="cq2">109</td><td class="cchg pos">▲62% (+47억)</td></tr>
+            <tr><td><b>북미</b></td><td>374</td><td>351</td><td>370</td><td>291</td><td class="cq1">211</td><td class="cq1">255</td><td class="cq1">222</td><td class="cq2">157</td><td class="cq2">196</td><td class="cq2">187</td><td class="cchg neg">▼21% (-49억)</td></tr>
+            <tr><td><b>기타</b></td><td>418</td><td>520</td><td>660</td><td>781</td><td class="cq1">937</td><td class="cq1">954</td><td class="cq1">978</td><td class="cq2">937</td><td class="cq2">1,106</td><td class="cq2">1,061</td><td class="cchg pos">▲8% (+78억)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">③ 장르별 월평균 매출 변화</div>
+    <div class="sec-summary dn"><b>Adventure</b> <span class="r"><b>▼36%(-283억)</b></span> · <b>Action</b> <span class="r"><b>▼26%(-197억)</b></span> 감소 속 <b>Sports</b> <span class="g"><b>▲11%(+62억)</b></span> · <b>Simulation</b> <span class="g"><b>▲7%(+43억)</b></span> 성장</div>
+    <div class="chart-card">
+      <div class="chart-title">장르별 매출 추이 ('22~'25 연평균 + 26년 월별, 억원)</div>
+      <div class="ch mid"><canvas id="jp_genre_trend"></canvas></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div class="chart-card">
+        <div class="chart-title">장르별 1Q→2Q QoQ (%)</div>
+        <div class="ch-full"><canvas id="jp_genre"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">장르별 실제 변화액 (억원/월, 1Q→2Q)</div>
+        <div class="ch-full"><canvas id="jp_genre_amt"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">④ 퍼블리셔 국적 × 장르 매출 변화</div>
+    <div class="sec-summary dn">JP <b>Adventure</b> <span class="r"><b>▼215억</b></span> · <b>Action</b> <span class="r"><b>▼174억</b></span> · <b>Role Playing</b> <span class="r"><b>▼130억</b></span> 전반 감소 — <b>KR Role Playing</b> <span class="g"><b>▲50억</b></span> · <b>JP Sports</b> <span class="g"><b>▲62억</b></span> · <b>JP Simulation</b> <span class="g"><b>▲43억</b></span>이 부분 만회</div>
+    <div class="chart-card">
+      <div class="chart-title">주요 조합 매출 추이 ('22~'25 연평균 + 26년 월별, 억원)</div>
+      <div class="ch mid"><canvas id="jp_pubgenre_trend"></canvas></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div class="chart-card">
+        <div class="chart-title">퍼블리셔 국적 × 장르 — 1Q→2Q QoQ (%)</div>
+        <div class="ch-full"><canvas id="jp_pubgenre"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">퍼블리셔 국적 × 장르 — 실제 변화액 (억원/월, 1Q→2Q)</div>
+        <div class="ch-full"><canvas id="jp_pubgenre_amt"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num sec-toggle" onclick="toggleSec('jp5body')">⑤ 대표 게임별 증감 <span class="toggle-hint">▶ 클릭하여 펼치기</span></div>
+    <div id="jp5body" style="display:none">
+    <div class="sec-summary dn"><b>우마무스메</b> <span class="r">▼192억</span> · <b>드래곤볼Z</b> <span class="r">▼163억</span> · <b>프야스A</b> <span class="r">▼117억</span> 감소 속 <b>eFootball</b> <span class="g">▲142억</span> · <b>Honkai SR</b> <span class="g">▲101억</span>이 부분 만회</div>
+    <div class="chart-card">
+      <div class="chart-title">대표 게임 매출 추이 ('22~'25 연평균 + 26년 월별, 억원)</div>
+      <div class="ch mid"><canvas id="jp_game_trend"></canvas></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div class="chart-card">
+        <div class="chart-title">게임별 1Q→2Q QoQ (%)</div>
+        <div style="position:relative;height:300px;width:100%"><canvas id="jp_game"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">게임별 실제 변화액 (억원/월, 1Q→2Q)</div>
+        <div style="position:relative;height:300px;width:100%"><canvas id="jp_game_amt"></canvas></div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">⑥ 자국 퍼블리셔 매출 추이 & 변화원인</div>
+    <div class="sec-summary dn"><b>Cygames</b> <span class="r"><b>▼232억(-51%)</b></span> · <b>Bandai Namco</b> <span class="r"><b>▼122억(-15%)</b></span> 동반 감소 속 <b>KONAMI</b> eFootball <span class="g"><b>▲9%</b></span> · <b>SQUARE ENIX</b> DQ신규 <span class="g"><b>▲59%</b></span> 선전 — <b>NHN PlayArt</b> <span class="g"><b>▲136%</b></span> 급성장</div>
+    <div class="chart-card">
+      <div class="chart-title">JP 자국 퍼블리셔 매출 추이 ('22~'25 연평균 + 26년 월별, 억원)</div>
+      <div class="ch wide"><canvas id="jp_pub_trend"></canvas></div>
+      <div style="overflow-x:auto;margin-top:10px;display:flex;justify-content:center">
+          <table class="tbl" style="width:780px;white-space:nowrap">
+            <thead><tr><th>퍼블리셔</th><th>'22</th><th>'23</th><th>'24</th><th>'25</th><th class="cq1">01월</th><th class="cq1">02월</th><th class="cq1">03월</th><th class="cq2">04월</th><th class="cq2">05월</th><th class="cq2">06월</th><th class="cchg">QoQ</th></tr></thead>
+            <tbody>
+              <tr><td><b>Bandai Namco</b></td><td>702</td><td>645</td><td>695</td><td>850</td><td class="cq1">970</td><td class="cq1">864</td><td class="cq1">612</td><td class="cq2">745</td><td class="cq2">826</td><td class="cq2">508</td><td class="cchg neg">▼15%</td></tr>
+              <tr><td><b>KONAMI</b></td><td>655</td><td>713</td><td>609</td><td>542</td><td class="cq1">632</td><td class="cq1">362</td><td class="cq1">737</td><td class="cq2">612</td><td class="cq2">561</td><td class="cq2">712</td><td class="cchg pos">▲9%</td></tr>
+              <tr><td><b>Cygames</b></td><td>863</td><td>562</td><td>408</td><td>390</td><td class="cq1">326</td><td class="cq1">368</td><td class="cq1">667</td><td class="cq2">197</td><td class="cq2">256</td><td class="cq2">211</td><td class="cchg neg">▼51%</td></tr>
+              <tr><td><b>Aniplex</b></td><td>634</td><td>543</td><td>447</td><td>519</td><td class="cq1">597</td><td class="cq1">238</td><td class="cq1">267</td><td class="cq2">205</td><td class="cq2">226</td><td class="cq2">226</td><td class="cchg neg">▼40%</td></tr>
+              <tr><td><b>GungHo</b></td><td>407</td><td>306</td><td>280</td><td>206</td><td class="cq1">236</td><td class="cq1">294</td><td class="cq1">238</td><td class="cq2">239</td><td class="cq2">203</td><td class="cq2">271</td><td class="cchg neg">▼7%</td></tr>
+              <tr><td><b>SQUARE ENIX</b></td><td>672</td><td>577</td><td>430</td><td>264</td><td class="cq1">254</td><td class="cq1">100</td><td class="cq1">187</td><td class="cq2">255</td><td class="cq2">377</td><td class="cq2">230</td><td class="cchg pos">▲59%</td></tr>
+              <tr><td><b>NHN PlayArt</b></td><td>42</td><td>35</td><td>47</td><td>62</td><td class="cq1">47</td><td class="cq1">27</td><td class="cq1">24</td><td class="cq2">97</td><td class="cq2">106</td><td class="cq2">28</td><td class="cchg pos">▲136%</td></tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+    <div class="chart-card" style="margin-top:8px">
+      <div style="display:flex;gap:12px">
+        <div style="flex:1;min-width:0">
+          <div class="chart-title">퍼블리셔별 주요 게임 QoQ %</div>
+          <div style="position:relative;height:320px"><canvas id="jp_pub_game"></canvas></div>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="chart-title">퍼블리셔별 주요 게임 변화액 (억원)</div>
+          <div style="position:relative;height:320px"><canvas id="jp_pub_game_amt"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div><!-- /tab-jp -->
+
+<!-- ═══════════════════════════ US ═══════════════════════════ -->
+<div id="tab-us" class="tab-content">
+
+  <div class="country-kpi">
+    <div class="kpi-item"><div class="kpi-label">총매출 1Q</div><div class="kpi-val">18,686억</div></div>
+    <div class="kpi-item"><div class="kpi-label">총매출 2Q</div><div class="kpi-val dn">17,767억</div><div class="kpi-chg dn">-4.9%</div></div>
+    <div class="kpi-item"><div class="kpi-label">MAU 1Q</div><div class="kpi-val">30,371만</div></div>
+    <div class="kpi-item"><div class="kpi-label">MAU 2Q</div><div class="kpi-val dn">29,846만</div><div class="kpi-chg dn">-1.7%</div></div>
+    <div class="kpi-item"><div class="kpi-label">DL 1Q</div><div class="kpi-val">3,197만건</div></div>
+    <div class="kpi-item"><div class="kpi-label">DL 2Q</div><div class="kpi-val dn">2,947만건</div><div class="kpi-chg dn">-7.8%</div></div>
+    <div class="kpi-item"><div class="kpi-label">중화권 점유</div><div class="kpi-val">24.0%</div><div class="kpi-chg up">→ 22.4%</div></div>
+  </div>
+
+  <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;margin:10px 0 4px;font-size:.78rem;color:#374151;line-height:1.9">
+    <b>2Q 주요 변화 원인</b><br>
+    📉 중화권 총 매출 <b style="color:#dc2626">-489억</b><span style="color:#6b7280;font-size:.75em">(4,477억→3,988억)</span> — 중화권 Strategy <b style="color:#dc2626">-544억</b> (<b>Last War</b> 주도)<br>
+    🇨🇳 중화권 점유 <b>24.0% → <span style="color:#16a34a;font-weight:700">22.4%</span></b> 축소 — 3국 중 유일
+  </div>
+
+
+  <div class="sec">
+    <div class="sec-num">① 매출 변화원인 분해 <span style="font-size:.7rem;font-weight:400;color:#6b7280">(26년 1Q 대비 2Q)</span></div>
+    <div class="sec-summary dn">매출 <span class="r">-4.9%</span> · MAU <span class="r">-1.7%</span> · 다운로드 <span class="r">-7.8%</span> — ARPMAU 0.6만원 유지 (변동 없음)</div>
+    <div class="chart-card">
+      <div class="chart-title">총매출 · MAU · 다운로드 · ARPMAU 추이</div>
+      <div class="chart-row4">
+        <div><div style="font-size:.65rem;font-weight:700;color:#64748b;margin-bottom:6px">총매출 (억원)</div><div class="ch"><canvas id="us_rev"></canvas></div></div>
+        <div><div style="font-size:.65rem;font-weight:700;color:#64748b;margin-bottom:6px">MAU (만명)</div><div class="ch"><canvas id="us_mau"></canvas></div></div>
+        <div><div style="font-size:.65rem;font-weight:700;color:#64748b;margin-bottom:6px">다운로드 (만건)</div><div class="ch"><canvas id="us_dl"></canvas></div></div>
+        <div><div style="font-size:.65rem;font-weight:700;color:#64748b;margin-bottom:6px">ARPMAU (만원)</div><div class="ch"><canvas id="us_arpmau"></canvas></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">② 퍼블리셔 국적별 월평균 매출 변화</div>
+    <div class="sec-summary dn">중화권 매출 <span class="r"><b>▼11%(-489억)</b></span> · 북미 매출 <span class="r">▼4%(-166억)</span> 동반 감소 — 중화권 점유 <b>24.0%→22.4%</b> · 기타 비중 <b>47.9%→49.8%</b></div>
+    <div class="chart-card">
+      <div class="chart-title">퍼블리셔 국적별 매출 비중 추이 (%)</div>
+      <div class="ch wide"><canvas id="us_pub"></canvas></div>
+      <div class="chart-title" style="margin-top:14px">퍼블리셔 국적별 실제 매출 추이 (억원)</div>
+      <div style="overflow-x:auto;margin-top:6px;display:flex;justify-content:center">
+        <table class="tbl" style="width:780px;white-space:nowrap">
+          <thead><tr><th>퍼블리셔 국적</th><th>'22</th><th>'23</th><th>'24</th><th>'25</th><th class="cq1">01월</th><th class="cq1">02월</th><th class="cq1">03월</th><th class="cq2">04월</th><th class="cq2">05월</th><th class="cq2">06월</th><th class="cchg">QoQ</th></tr></thead>
+          <tbody>
+            <tr><td><b>기타</b></td><td>6,841</td><td>7,464</td><td>8,535</td><td>9,251</td><td class="cq1">9,493</td><td class="cq1">8,476</td><td class="cq1">8,892</td><td class="cq2">8,690</td><td class="cq2">9,228</td><td class="cq2">8,633</td><td class="cchg neg">▼1% (-104억)</td></tr>
+            <tr><td><b>북미</b></td><td>5,067</td><td>6,174</td><td>7,325</td><td>5,782</td><td class="cq1">4,834</td><td class="cq1">4,326</td><td class="cq1">4,660</td><td class="cq2">4,284</td><td class="cq2">4,505</td><td class="cq2">4,534</td><td class="cchg neg">▼4% (-166억)</td></tr>
+            <tr><td><b>중화권</b></td><td>2,281</td><td>2,249</td><td>2,959</td><td>4,085</td><td class="cq1">4,466</td><td class="cq1">4,422</td><td class="cq1">4,543</td><td class="cq2">4,383</td><td class="cq2">3,985</td><td class="cq2">3,595</td><td class="cchg neg">▼11% (-489억)</td></tr>
+            <tr><td><b>JP</b></td><td>301</td><td>332</td><td>397</td><td>675</td><td class="cq1">576</td><td class="cq1">460</td><td class="cq1">426</td><td class="cq2">345</td><td class="cq2">449</td><td class="cq2">345</td><td class="cchg neg">▼22% (-107억)</td></tr>
+            <tr><td><b>KR</b></td><td>198</td><td>136</td><td>144</td><td>205</td><td class="cq1">283</td><td class="cq1">88</td><td class="cq1">113</td><td class="cq2">153</td><td class="cq2">95</td><td class="cq2">76</td><td class="cchg neg">▼33% (-53억)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">③ 장르별 월평균 매출 변화</div>
+    <div class="sec-summary mix"><b>Strategy</b> <span class="r"><b>▼19%(-715억)</b></span> · <b>Casino(PvE)</b> <span class="r"><b>▼10%(-206억)</b></span> · <b>Board</b> <span class="r"><b>▼9%(-162억)</b></span> 감소 속 <b>Word</b> <span class="g"><b>▲97%(+67억)</b></span> · <b>머지</b> <span class="g"><b>▲7%(+102억)</b></span> · <b>Puzzle</b> <span class="g"><b>▲3%(+158억)</b></span> 성장</div>
+    <div class="chart-card">
+      <div class="chart-title">장르별 매출 추이 ('22~'25 연평균 + 26년 월별, 억원)</div>
+      <div class="ch mid"><canvas id="us_genre_trend"></canvas></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div class="chart-card">
+        <div class="chart-title">장르별 1Q→2Q QoQ (%)</div>
+        <div class="ch-full"><canvas id="us_genre"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">장르별 실제 변화액 (억원/월, 1Q→2Q)</div>
+        <div class="ch-full"><canvas id="us_genre_amt"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">④ 퍼블리셔 국적 × 장르 매출 변화</div>
+    <div class="sec-summary dn">중화권 <b>Strategy</b> <span class="r"><b>▼544억</b></span> · 기타 <b>Strategy</b> <span class="r"><b>▼157억</b></span> 동반 감소 — <b>기타 Puzzle</b> <span class="g"><b>▲135억</b></span> · <b>중화권 머지</b> <span class="g"><b>▲95억</b></span>이 부분 상쇄</div>
+    <div class="chart-card">
+      <div class="chart-title">주요 조합 매출 추이 ('22~'25 연평균 + 26년 월별, 억원)</div>
+      <div class="ch mid"><canvas id="us_pubgenre_trend"></canvas></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div class="chart-card">
+        <div class="chart-title">퍼블리셔 국적 × 장르 — 1Q→2Q QoQ (%)</div>
+        <div class="ch-full"><canvas id="us_pubgenre"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">퍼블리셔 국적 × 장르 — 실제 변화액 (억원/월, 1Q→2Q)</div>
+        <div class="ch-full"><canvas id="us_pubgenre_amt"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num sec-toggle" onclick="toggleSec('us5body')">⑤ 대표 게임별 증감 <span class="toggle-hint">▶ 클릭하여 펼치기</span></div>
+    <div id="us5body" style="display:none">
+    <div class="sec-summary dn"><b>Last War</b> <span class="r"><b>▼422억</b></span> · <b>Clash Royale</b> <span class="r"><b>▼96억</b></span> · <b>MONOPOLY GO</b> <span class="r"><b>▼93억</b></span> 감소 속 <b>Roblox</b> <span class="g"><b>▲101억</b></span> · <b>Sword x Staff</b> <span class="g"><b>▲165억</b></span><span style="color:#6b7280;font-size:.85em">(6월 신규,1개월)</span> 성장</div>
+    <div class="chart-card">
+      <div class="chart-title">대표 게임 매출 추이 ('22~'25 연평균 + 26년 월별, 억원)</div>
+      <div class="ch mid"><canvas id="us_game_trend"></canvas></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div class="chart-card">
+        <div class="chart-title">게임별 1Q→2Q QoQ (%)</div>
+        <div style="position:relative;height:300px;width:100%"><canvas id="us_game"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">게임별 실제 변화액 (억원/월, 1Q→2Q)</div>
+        <div style="position:relative;height:300px;width:100%"><canvas id="us_game_amt"></canvas></div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">⑥ 자국 퍼블리셔 매출 추이 & 변화원인</div>
+    <div class="sec-summary mix"><b>Niantic</b> <span class="r"><b>▼88억(-22%)</b></span> · <b>Scopely</b> <span class="r"><b>▼129억(-9%)</b></span> 감소 속 <b>Roblox</b> <span class="g"><b>▲101억(▲64%)</b></span> 성장하며 순위 역전 — <b>NYT Games</b> <span class="g"><b>▲13%</b></span> 증가세 지속</div>
+    <div class="chart-card">
+      <div class="chart-title">US 자국 퍼블리셔 매출 추이 ('22~'25 연평균 + 26년 월별, 억원)</div>
+      <div class="ch wide"><canvas id="us_pub_trend"></canvas></div>
+      <div style="overflow-x:auto;margin-top:10px;display:flex;justify-content:center">
+          <table class="tbl" style="width:780px;white-space:nowrap">
+            <thead><tr><th>퍼블리셔</th><th>'22</th><th>'23</th><th>'24</th><th>'25</th><th class="cq1">01월</th><th class="cq1">02월</th><th class="cq1">03월</th><th class="cq2">04월</th><th class="cq2">05월</th><th class="cq2">06월</th><th class="cchg">QoQ</th></tr></thead>
+            <tbody>
+              <tr><td><b>Scopely</b></td><td>473</td><td>1,444</td><td>2,512</td><td>1,920</td><td class="cq1">1,763</td><td class="cq1">1,356</td><td class="cq1">1,438</td><td class="cq2">1,378</td><td class="cq2">1,446</td><td class="cq2">1,346</td><td class="cchg neg">▼9%</td></tr>
+              <tr><td><b>Niantic</b></td><td>392</td><td>431</td><td>424</td><td>406</td><td class="cq1">265</td><td class="cq1">434</td><td class="cq1">480</td><td class="cq2">301</td><td class="cq2">300</td><td class="cq2">315</td><td class="cchg neg">▼22%</td></tr>
+              <tr><td><b>Roblox</b></td><td>739</td><td>903</td><td>1,151</td><td>422</td><td class="cq1">144</td><td class="cq1">122</td><td class="cq1">208</td><td class="cq2">210</td><td class="cq2">247</td><td class="cq2">319</td><td class="cchg pos">▲64%</td></tr>
+              <tr><td><b>Activision</b></td><td>364</td><td>365</td><td>299</td><td>312</td><td class="cq1">269</td><td class="cq1">279</td><td class="cq1">237</td><td class="cq2">231</td><td class="cq2">262</td><td class="cq2">252</td><td class="cchg neg">▼5%</td></tr>
+              <tr><td><b>EA</b></td><td>226</td><td>245</td><td>237</td><td>219</td><td class="cq1">219</td><td class="cq1">208</td><td class="cq1">183</td><td class="cq2">182</td><td class="cq2">246</td><td class="cq2">252</td><td class="cchg pos">▲12%</td></tr>
+              <tr><td><b>SciPlay</b></td><td>172</td><td>221</td><td>215</td><td>191</td><td class="cq1">191</td><td class="cq1">170</td><td class="cq1">191</td><td class="cq2">153</td><td class="cq2">148</td><td class="cq2">151</td><td class="cchg neg">▼18%</td></tr>
+              <tr><td><b>Playtika</b></td><td>278</td><td>268</td><td>268</td><td>223</td><td class="cq1">169</td><td class="cq1">142</td><td class="cq1">159</td><td class="cq2">154</td><td class="cq2">153</td><td class="cq2">143</td><td class="cchg neg">▼4%</td></tr>
+              <tr><td><b>DoubleDown</b></td><td>225</td><td>217</td><td>203</td><td>205</td><td class="cq1">146</td><td class="cq1">122</td><td class="cq1">121</td><td class="cq2">114</td><td class="cq2">117</td><td class="cq2">89</td><td class="cchg neg">▼18%</td></tr>
+              <tr><td><b>NYT Games</b></td><td>—</td><td>40</td><td>51</td><td>69</td><td class="cq1">64</td><td class="cq1">65</td><td class="cq1">78</td><td class="cq2">69</td><td class="cq2">74</td><td class="cq2">91</td><td class="cchg pos">▲13%</td></tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+    <div class="chart-card" style="margin-top:8px">
+      <div style="display:flex;gap:12px">
+        <div style="flex:1;min-width:0">
+          <div class="chart-title">퍼블리셔별 주요 게임 QoQ %</div>
+          <div style="position:relative;height:290px"><canvas id="us_pub_game"></canvas></div>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="chart-title">퍼블리셔별 주요 게임 변화액 (억원)</div>
+          <div style="position:relative;height:290px"><canvas id="us_pub_game_amt"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div><!-- /tab-us -->
+
+</div><!-- /page -->
+
+<script>
+/* ── 탭 전환 ── */
+function showTab(id,btn){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ── Q1/Q2 음영 플러그인 ── */
+const shade={id:'shade',afterDraw(c){
+  const {ctx,chartArea:{left,right,top,bottom},scales:{x}}=c;
+  if(!x||c.config.type==='bar'&&c.config.options?.indexAxis==='y')return;
+  const w=x.getPixelForValue(1)-x.getPixelForValue(0);
+  const sh=(s,e,col,lbl)=>{
+    const x1=x.getPixelForValue(s)-w*.5, x2=x.getPixelForValue(e)+w*.5;
+    ctx.save();ctx.fillStyle=col;
+    ctx.fillRect(Math.max(x1,left),top,Math.min(x2,right)-Math.max(x1,left),bottom-top);
+    ctx.font='bold 9px sans-serif';ctx.fillStyle='#94a3b8';ctx.textAlign='center';
+    ctx.fillText(lbl,(Math.max(x1,left)+Math.min(x2,right))/2,top+12);ctx.restore();
+  };
+  sh(4,6,'rgba(59,130,246,.07)','◀ 1Q');
+  sh(7,9,'rgba(239,68,68,.07)','2Q ▶');
+}};
+Chart.register(shade);
+
+const LBL=["'22","'23","'24","'25","01월","02월","03월","04월","05월","06월"];
+const LBL6=["01월","02월","03월","04월","05월","06월"];
+
+/* ── 헬퍼 ── */
+function mkLine(id,data,color,unit='억'){
+  const vals=data.filter(v=>v!=null);
+  const mx=Math.max(...vals);
+  new Chart(document.getElementById(id),{type:'line',
+    data:{labels:LBL,datasets:[{data,borderColor:color,backgroundColor:color+'15',
+      pointRadius:[3,3,3,3,4,4,4,5,5,5],
+      pointBackgroundColor:data.map((_,i)=>i<4?color+'88':i<7?color+'cc':color),
+      pointBorderColor:data.map((_,i)=>i>=7?'#fff':'transparent'),
+      pointBorderWidth:2,tension:0.3,fill:true,borderWidth:2.5,label:''}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.parsed.y.toLocaleString()}${unit}`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:11},maxRotation:0}},
+              y:{min:0,suggestedMax:mx*1.5,grid:{color:'#f1f5f9'},ticks:{font:{size:11},callback:v=>v.toLocaleString()}}}}});
+}
+
+function mkLines(id,datasets){
+  const COLORS=['#1d4ed8','#dc2626','#16a34a','#f97316','#a855f7','#0891b2','#ca8a04','#94a3b8','#be123c','#0f766e','#7c3aed','#92400e'];
+  new Chart(document.getElementById(id),{type:'line',
+    data:{labels:LBL,datasets:datasets.map((d,i)=>({
+      label:d.label,
+      data:d.data,
+      borderColor:d.color||COLORS[i%COLORS.length],
+      backgroundColor:'transparent',
+      tension:0.3,pointRadius:3,borderWidth:2,spanGaps:true
+    }))},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:10,padding:6}},
+               tooltip:{mode:'index',intersect:false,callbacks:{
+                 label:c=>c.parsed.y!=null?`${c.dataset.label}: ${c.parsed.y.toLocaleString()}억`:null
+               }}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:11},maxRotation:0}},
+              y:{min:0,grid:{color:'#f1f5f9'},ticks:{font:{size:11},callback:v=>v.toLocaleString()}}}}});
+}
+
+function mkStack(id,datasets){
+  // 각 기간별 합계 계산
+  const totals=LBL.map((_,i)=>datasets.reduce((s,d)=>s+(d.data[i]||0),0));
+  // 각 데이터를 비율(%)로 변환
+  const pctDatasets=datasets.map(d=>({
+    ...d,
+    data:d.data.map((v,i)=>totals[i]?+(v/totals[i]*100).toFixed(1):0),
+    _abs:d.data
+  }));
+  new Chart(document.getElementById(id),{type:'bar',
+    data:{labels:LBL,datasets:pctDatasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}},
+               tooltip:{mode:'index',intersect:false,callbacks:{
+                 label:c=>{
+                   const abs=datasets[c.datasetIndex]._abs?datasets[c.datasetIndex]._abs[c.dataIndex]:null;
+                   const absStr=abs!=null?` (${abs.toLocaleString()}억)`:'';
+                   return `${c.dataset.label}: ${c.parsed.y.toFixed(1)}%${absStr}`;
+                 }
+               }}},
+      scales:{
+        x:{stacked:true,grid:{display:false},ticks:{font:{size:11},maxRotation:0}},
+        y:{stacked:true,min:0,max:100,grid:{color:'#f1f5f9'},ticks:{font:{size:11},callback:v=>v+'%'}}
+      }}});
+}
+
+function toggleSec(id){
+  const body=document.getElementById(id);
+  const hint=body.previousElementSibling.querySelector('.toggle-hint');
+  const open=body.style.display==='none';
+  body.style.display=open?'':'none';
+  hint.textContent=open?'▼ 클릭하여 접기':'▶ 클릭하여 펼치기';
+  if(open) body.querySelectorAll('canvas').forEach(c=>{
+    const ch=Chart.getChart(c);
+    if(ch) ch.resize();
+  });
+}
+function mkHbar(id,labels,vals,colors,yWidth,unit,amts,q1s,q2s){
+  const c=colors||vals.map(v=>v>0?'#16a34a':v<0?'#dc2626':'#94a3b8');
+  const yw=yWidth||210;
+  const u=unit||'억';
+  new Chart(document.getElementById(id),{type:'bar',
+    data:{labels,datasets:[{data:vals,backgroundColor:c,borderRadius:3,barThickness:14}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{
+        const v=ctx.parsed.x;
+        const sign=v>0?'+':'';
+        const main=`${sign}${v}${u}`;
+        if(amts){const a=amts[ctx.dataIndex];const as=a>0?'+':'';return `${main} (실제 ${as}${a}억)`;}
+        if(q1s&&q2s){const q1=q1s[ctx.dataIndex];const q2=q2s[ctx.dataIndex];return[main,`Q1 평균 ${q1}억 → Q2 평균 ${q2}억`];}
+        return main;
+      }}}},
+      scales:{x:{grid:{color:'#f1f5f9'},ticks:{font:{size:11}}},
+              y:{grid:{display:false},
+                 ticks:{font:{size:11},color:'#374151'},
+                 afterFit(scale){scale.width=yw;}}}}});
+}
+
+function mkBar6(id,data,color){
+  new Chart(document.getElementById(id),{type:'bar',
+    data:{labels:LBL6,datasets:[{data,backgroundColor:data.map((_,i)=>i>=3?color+'cc':color+'66'),
+      borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.parsed.y.toLocaleString()}억`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10}}},
+              y:{min:0,grid:{color:'#f1f5f9'},ticks:{font:{size:10},callback:v=>v.toLocaleString()},
+                 title:{display:true,text:'억원',font:{size:9}}}}}});
+}
+
+/* ══════════ KR 차트 ══════════ */
+mkLine('kr_rev',[3835,4003,4488,4800,4315,4011,3887,3937,4266,3909],'#2563eb');
+mkLine('kr_mau',[4292,4092,3663,3620,3866,3765,3165,3107,3390,3295],'#2563eb','만명');
+mkLine('kr_dl', [569,557,620,549,580,436,474,385,370,413],'#2563eb','만건');
+mkLine('kr_arpmau',[0.9,1.0,1.2,1.3,1.1,1.1,1.2,1.3,1.3,1.2],'#2563eb','만원');
+
+mkStack('kr_pub',[
+  {label:'KR TOP5', data:[2122,1956,1610,1843,1565,1376,1468,1208,1197,1343],backgroundColor:'#1d4ed8'},
+  {label:'KR 기타', data:[444,591,663,562,506,486,491,539,582,535],           backgroundColor:'#93c5fd'},
+  {label:'중화권',  data:[847,1033,1619,1775,1441,1413,1314,1514,1640,1345],  backgroundColor:'#ef4444'},
+  {label:'북미',    data:[148,129,134,185,171,178,112,115,195,110],           backgroundColor:'#a855f7'},
+  {label:'JP',      data:[58,30,59,76,62,75,40,80,60,57],                    backgroundColor:'#f97316'},
+  {label:'기타',    data:[216,264,403,359,569,483,463,482,592,519],           backgroundColor:'#94a3b8'},
+]);
+
+mkHbar('kr_genre',
+  ['방치형 (MapleStory Idle↓ StoneAge↓)','Sports (FC모바일↓)','Strategy (Last War↓ Kingshot↑)','MMORPG (SOL신규↑ 기존게임↓ 상쇄)','머지 (Gossip Harbor↑)','비MMORPG (NIKKE↑ 이환신규↑)','Casual (Lucky Defense↑)'],
+  [-45.9,-12.7,-3.5,1.2,21.7,28.8,53.5],null,260,'%',
+  [-273,-27,-34,9,52,130,40]);
+
+mkHbar('kr_genre_amt',
+  ['방치형 (MapleStory Idle↓ StoneAge↓)','Sports (FC모바일↓)','Strategy (Last War↓)','MMORPG (SOL신규↑ 기존게임↓ 상쇄)','머지 (Gossip Harbor↑)','비MMORPG (NIKKE↑ 이환신규↑)','Casual (Lucky Defense↑)'],
+  [-273,-27,-34,9,52,130,40],null,320,'억',null,null,null);
+
+mkHbar('kr_pubgenre',
+  ['KR 방치형 (MapleStory Idle↓ StoneAge↓)','기타 Strategy (Last Z↓ Dark War↓)','KR Sports (FC모바일↓)','중화권 Strategy (Kingshot↑ Last War↓)','기타 Puzzle (Royal Match↑)','중화권 비MMORPG (NIKKE↑ Wuthering Waves↑)','중화권 머지 (Gossip Harbor↑ Tasty↑)','KR MMORPG (SOL신규↑ 리니지M↑)','KR Casual (Lucky Defense↑)','KR 비MMORPG (Dragon Village3신규↑ MONGIL신규↑)'],
+  [-49.0,-44.0,-18.0,5.0,13.0,25.0,21.0,6.0,54.0,22.0],null,330,'%',
+  [-267,-69,-36,36,31,67,43,36,40,38]);
+
+mkHbar('kr_pubgenre_amt',
+  ['KR 방치형 (MapleStory Idle↓ StoneAge↓)','기타 Strategy (Last Z↓ Dark War↓)','KR Sports (FC모바일↓)','중화권 Strategy (Kingshot↑ Last War↓)','기타 Puzzle (Royal Match↑)','중화권 비MMORPG (NIKKE↑ Wuthering Waves↑)','중화권 머지 (Gossip Harbor↑ Tasty↑)','KR MMORPG (SOL신규↑ 리니지M↑)','KR Casual (Lucky Defense↑)','KR 비MMORPG (Dragon Village3신규↑ MONGIL신규↑)'],
+  [-267,-69,-36,36,31,67,43,36,40,38],null,330,'억',null,
+  [544,158,196,705,234,267,204,655,75,169],
+  [278,89,160,741,265,333,247,691,115,207]);
+
+mkLines('kr_pubgenre_trend',[
+  {label:'KR 방치형',       data:[19,82,71,116,611,414,607,264,321,248]},
+  {label:'기타 Strategy',   data:[41,25,16,164,234,137,102,106,89,71]},
+  {label:'KR Sports',       data:[181,234,203,199,193,211,184,168,158,154]},
+  {label:'중화권 비MMORPG', data:[225,344,311,269,265,292,243,308,376,315]},
+  {label:'중화권 머지',     data:[null,4,42,128,198,193,222,234,266,240]},
+  {label:'KR MMORPG',       data:[1756,1743,1428,1421,703,630,632,616,642,816]},
+  {label:'중화권 Strategy', data:[220,300,782,940,770,690,656,756,807,661]},
+  {label:'기타 Puzzle',     data:[103,170,240,248,251,223,229,250,279,265]},
+  {label:'KR Casual',       data:[11,16,95,69,65,87,72,115,117,112]},
+  {label:'KR 비MMORPG',     data:[273,212,162,315,200,179,128,251,180,189]},
+]);
+
+mkHbar('kr_game',
+  ['StoneAge Idle↓(3월~,1개월)','FC모바일↓','MapleStory Idle↓','Last Z↓','AION2↓','Last War↓','리니지M↑','Whiteout Survival↑','Lucky Defense↑','Wuthering Waves↑','Kingshot↑','NIKKE↑'],
+  [-83.8,-53.3,-49.2,-48.7,-43.3,-27.4,16.1,20.3,42.9,49.4,56.4,105.5],null,null,'%',
+  [-124.6,-46.9,-239.3,-49.5,-25.7,-73.4,33.3,49.4,28.9,28.2,77.1,67.9]);
+
+mkLines('kr_genre_trend',[
+  {label:'MMORPG',     data:[2007,1939,1509,1547,788,706,699,679,703,837]},
+  {label:'Strategy',   data:[318,373,864,1194,1106,958,867,966,1001,861]},
+  {label:'방치형',     data:[42,141,328,204,658,481,647,300,371,295]},
+  {label:'비MMORPG',   data:[549,570,490,593,475,485,391,572,613,554]},
+  {label:'머지',       data:[null,20,67,157,230,223,258,272,308,286]},
+  {label:'Sports',     data:[182,238,219,223,218,229,191,194,185,177]},
+  {label:'Casual',     data:[11,16,97,86,65,87,72,115,117,112]},
+]);
+
+mkHbar('kr_game_amt',
+  ['StoneAge Idle(3월~,1개월)','FC모바일','MapleStory Idle','Last Z','AION2','Last War','리니지M','Whiteout Survival','Lucky Defense','Wuthering Waves','Kingshot','NIKKE','SOL:enchant(6월신규,1개월)'],
+  [-124.6,-46.9,-239.3,-49.5,-25.7,-73.4,33.3,49.4,28.9,28.2,77.1,67.9,204.8],null,120,'억',null,
+  [149.0,88.0,486.6,101.6,59.4,267.5,206.7,243.5,67.3,57.2,136.7,64.4,null],
+  [23.7,41.1,247.4,52.1,33.7,194.2,240.0,292.8,96.2,85.4,213.7,132.3,102.4]);
+
+mkLines('kr_game_trend',[
+  {label:'MapleStory Idle', color:'#1d4ed8', data:[null,null,null,101,611,414,434,215,291,235]},
+  {label:'StoneAge Idle',   color:'#7c3aed', data:[null,null,null,null,null,null,149,38,21,12]},
+  {label:'Last War',        color:'#dc2626', data:[null,7,423,346,291,286,225,276,180,127]},
+  {label:'Kingshot',        color:'#16a34a', data:[null,null,null,82,133,130,147,180,267,194]},
+  {label:'NIKKE',           color:'#84cc16', data:[30,66,81,72,82,56,55,138,184,75]},
+  {label:'Whiteout',        color:'#ec4899', data:[null,78,215,381,272,228,230,257,319,303]},
+  {label:'리니지M',         color:'#92400e', data:[406,476,510,455,196,197,227,231,256,233]},
+  {label:'SOL:enchant',     color:'#0891b2', data:[null,null,null,null,null,null,null,null,null,205]},
+]);
+
+/* ══════════ JP 차트 ══════════ */
+mkLine('jp_rev',[9700,9062,9157,9058,9464,8103,8265,7970,8433,7719],'#dc2626');
+mkLine('jp_mau',[10158,9588,8647,8717,9166,8149,8081,7888,8317,8109],'#dc2626','만명');
+mkLine('jp_dl', [757,851,802,716,855,656,666,691,621,616],'#dc2626','만건');
+mkLine('jp_arpmau',[1.0,0.9,1.1,1.0,1.0,1.0,1.0,1.0,1.0,1.0],'#dc2626','만원');
+
+mkStack('jp_pub',[
+  {label:'JP TOP5', data:[3633,3139,2744,2712,3074,2113,2519,2161,2173,2004],backgroundColor:'#b91c1c'},
+  {label:'JP 기타', data:[2468,2444,2294,2240,2089,1755,1753,1708,1947,1620],backgroundColor:'#fca5a5'},
+  {label:'중화권',  data:[2511,2421,2938,2920,3056,2973,2717,2895,2864,2739],backgroundColor:'#ef4444'},
+  {label:'KR',      data:[296,187,151,114,98,52,77,112,147,109],             backgroundColor:'#2563eb'},
+  {label:'북미',    data:[374,351,370,291,211,255,222,157,196,187],          backgroundColor:'#a855f7'},
+  {label:'기타',    data:[418,520,660,781,937,954,978,937,1106,1061],         backgroundColor:'#94a3b8'},
+]);
+
+mkHbar('jp_genre',
+  ['Adventure (우마무스메↓)','Action (드래곤볼Z↓ 원피스↓)','Role Playing (FGO↓ DragonQuest신규↑)','Puzzle (츠무츠무↓ P&D↓)','Strategy (Last War↓ 작혼↑)','Simulation (학원아이마스↑ 파워프로신규↑)','Sports (eFootball↑ 프로야구스A↓)','머지 (Gossip Harbor↑)'],
+  [-36.0,-26.1,-4.6,-3.2,0.0,6.7,10.6,14.8],null,null,'%',
+  [-283,-197,-102,-31,0,43,62,40]);
+
+mkHbar('jp_genre_amt',
+  ['Adventure (우마무스메↓)','Action (드래곤볼Z↓ 원피스↓)','Role Playing (FGO↓ DragonQuest신규↑)','Puzzle (츠무츠무↓ P&D↓)','Strategy (Last War↓ 작혼↑)','Simulation (학원아이마스↑ 파워프로신규↑)','Sports (eFootball↑ 프로야구스A↓)','머지 (Gossip Harbor↑)'],
+  [-283,-197,-102,-31,0,43,62,40],null,320,'억',null,
+  [786,756,2200,951,1445,644,581,269],
+  [503,558,2098,921,1445,687,642,309]);
+
+mkHbar('jp_pubgenre',
+  ['JP Adventure (우마무스메↓ 디즈니트위스트↓)','JP Action (드래곤볼Z↓ 원피스↓)','JP Role Playing (FGO↓ DragonQuest신규↑)','중화권 Role Playing (블루아카이브↓ Honkai:SR↑)','중화권 Strategy (작혼↑ Last War↓)','JP Simulation (학원아이마스↑ 파워프로신규↑)','JP Sports (eFootball↑ 프로야구스A↓)','KR Role Playing (일곱 개의 대죄↑)'],
+  [-40.0,-34.0,-12.0,-7.0,2.0,8.0,11.0,112.0],null,330,'%',
+  [-215,-174,-130,-69,18,43,62,50]);
+
+mkHbar('jp_pubgenre_amt',
+  ['JP Adventure (우마무스메↓ 디즈니트위스트↓)','JP Action (드래곤볼Z↓ 원피스↓)','JP Role Playing (FGO↓ DragonQuest신규↑)','중화권 Role Playing (블루아카이브↓ Honkai:SR↑)','중화권 Strategy (작혼↑ Last War↓)','JP Simulation (학원아이마스↑ 파워프로신규↑)','JP Sports (eFootball↑ 프로야구스A↓)','KR Role Playing (일곱 개의 대죄↑)'],
+  [-215,-174,-130,-69,18,43,62,50],null,330,'억',null,
+  [541,507,1043,1050,1198,547,581,44],
+  [326,332,913,981,1216,590,642,94]);
+
+mkLines('jp_pubgenre_trend',[
+  {label:'중화권 Strategy',    data:[707,567,862,1138,1185,1209,1199,1227,1189,1231]},
+  {label:'중화권 Role Playing',data:[1119,1207,1235,963,1168,1131,850,943,1050,950]},
+  {label:'JP Role Playing',    data:[2420,2025,1661,1315,1544,815,772,842,998,899]},
+  {label:'JP Adventure',       data:[1130,864,656,556,436,375,812,297,419,263]},
+  {label:'JP Action',          data:[452,446,426,399,483,610,427,330,424,244]},
+  {label:'JP Sports',          data:[581,680,562,503,623,376,744,564,561,803]},
+  {label:'KR Role Playing',   data:[253,135,66,72,68,24,41,79,120,82]},
+  {label:'JP Simulation',      data:[154,366,482,737,762,425,454,770,568,433]},
+]);
+
+mkHbar('jp_game',
+  ['드래곤볼Z 닷칸↓','우마무스메↓','프야스A↓','Last War↓','NIKKE↑','eFootball↑','Honkai: Star Rail↑','NTE↑(5월신규,2개월)'],
+  [-72.9,-56.8,-40.4,-23.9,52.6,62.4,90.9,null],null,null,'%',
+  [-162.8,-191.5,-117.0,-103.6,61.3,142.1,101.2,110.5]);
+
+mkLines('jp_genre_trend',[
+  {label:'Adventure',    data:[1436,1153,952,846,688,659,1010,562,584,364]},
+  {label:'Action',       data:[849,844,846,748,756,825,687,544,672,458]},
+  {label:'Role Playing', data:[3943,3431,2986,2473,2811,2051,1736,1909,2311,2073]},
+  {label:'Puzzle',       data:[942,970,977,861,977,945,932,902,922,938]},
+  {label:'Strategy',     data:[928,723,1039,1383,1472,1500,1363,1422,1424,1488]},
+  {label:'Simulation',   data:[278,464,581,813,832,551,547,849,667,544]},
+  {label:'Sports',       data:[581,685,565,508,623,376,744,564,561,803]},
+  {label:'머지',         data:[null,21,31,155,244,251,313,292,315,320]},
+]);
+
+mkHbar('jp_game_amt',
+  ['드래곤볼Z 닷칸','우마무스메','프야스A','Last War','NIKKE','eFootball','Honkai: Star Rail','NTE(5월신규,2개월)'],
+  [-162.8,-191.5,-117.0,-103.6,61.3,142.1,101.2,110.5],null,140,'억',null,
+  [223,337,290,433,117,228,111,0],
+  [60,146,173,329,178,370,213,111]);
+
+mkLines('jp_game_trend',[
+  {label:'우마무스메',          color:'#1d4ed8', data:[747,482,345,273,201,265,546,126,179,131]},
+  {label:'드래곤볼Z 닷칸',     color:'#dc2626', data:[213,185,171,142,190,348,132,67,69,45]},
+  {label:'프야스A',             color:'#f97316', data:[401,381,279,219,225,117,527,135,142,241]},
+  {label:'eFootball',           color:'#16a34a', data:[58,173,225,235,335,195,153,358,364,387]},
+  {label:'Honkai: Star Rail',   color:'#0891b2', data:[null,275,264,237,45,101,189,233,238,167]},
+  {label:'Last War',         color:'#7c3aed', data:[null,null,329,467,392,486,420,386,320,282]},
+  {label:'NIKKE',            color:'#ca8a04', data:[611,249,173,135,141,108,101,173,266,94]},
+  {label:'NTE',              color:'#be123c', data:[null,null,null,null,null,null,null,null,103,118]},
+]);
+
+/* ══════════ US 차트 ══════════ */
+mkLine('us_rev',[14687,16355,19360,19999,19652,17772,18634,17855,18262,17183],'#7c3aed');
+mkLine('us_mau',[30620,29402,29390,29714,32660,28871,29581,29435,30341,29763],'#7c3aed','만명');
+mkLine('us_dl', [2952,3059,3152,3175,3811,2849,2932,2916,2985,2939],'#7c3aed','만건');
+mkLine('us_arpmau',[0.5,0.6,0.7,0.7,0.6,0.6,0.6,0.6,0.6,0.6],'#7c3aed','만원');
+
+mkStack('us_pub',[
+  {label:'북미 TOP5',data:[2489,3749,5097,3771,3131,2820,3015,2756,2860,2840],backgroundColor:'#6d28d9'},
+  {label:'북미 기타',data:[2578,2425,2228,2010,1703,1506,1645,1528,1645,1694],backgroundColor:'#c4b5fd'},
+  {label:'중화권',   data:[2281,2249,2959,4085,4466,4422,4543,4383,3985,3595],backgroundColor:'#ef4444'},
+  {label:'JP',       data:[301,332,397,675,576,460,426,345,449,345],          backgroundColor:'#f97316'},
+  {label:'KR',       data:[198,136,144,205,283,88,113,153,95,76],             backgroundColor:'#2563eb'},
+  {label:'기타',     data:[6841,7464,8535,9251,9493,8476,8892,8690,9228,8633],backgroundColor:'#94a3b8'},
+]);
+
+mkHbar('us_genre',
+  ['Strategy (Last War↓)','Casino(PvE) (Coin Master↓)','Board (MONOPOLY GO↓)','Puzzle (Block Out신규↑ Candy↓)','머지 (Mystery Town신규↑ Travel Town↓)','Word (NYT Games↑)'],
+  [-19.0,-10.0,-9.0,3.0,7.0,97.0],null,null,'%',
+  [-715,-206,-162,158,102,67]);
+
+mkHbar('us_genre_amt',
+  ['Strategy (Last War↓)','Casino(PvE) (Coin Master↓ DoubleU↓)','Board (MONOPOLY GO↓)','Puzzle (Block Out신규↑ Candy↓)','머지 (Mystery Town신규↑)','Word (Solitaire신규↑ NYT↑)'],
+  [-715,-206,-162,158,102,67],null,320,'억',null,
+  [3789,2068,1853,4704,1373,69],
+  [3074,1862,1691,4862,1475,136]);
+
+mkHbar('us_pubgenre',
+  ['기타 Simulation (Heartopia↓ Family Island↓)','JP Action (DRAGON BALL Z Dokkan↓)','중화권 Strategy (Last War↓ Whiteout↓)','기타 Strategy (Clash Royale↓ Last Z↓)','기타 Casino(PvE) (Coin Master↓)','북미 Board (MONOPOLY GO↓)','북미 Casino(PvE) (DoubleDown↓)','기타 Puzzle (Block Out신규↑ Candy Crush↓)','중화권 머지 (Tasty Travels↑ Mystery Town신규↑)','북미 Word (Solitaire신규↑ NYT↑)'],
+  [-31.1,-34.0,-20.9,-14.2,-13.8,-7.8,-8.3,2.9,9.7,96.7],null,330,'%',
+  [-47,-81,-544,-157,-72,-135,-102,135,95,67]);
+
+mkHbar('us_pubgenre_amt',
+  ['기타 Simulation (Heartopia↓ Family Island↓)','JP Action (DRAGON BALL Z Dokkan↓)','중화권 Strategy (Last War↓ Whiteout↓)','기타 Strategy (Clash Royale↓ Last Z↓)','기타 Casino(PvE) (Coin Master↓)','북미 Board (MONOPOLY GO↓)','북미 Casino(PvE) (DoubleDown↓)','기타 Puzzle (Block Out신규↑ Candy Crush↓)','중화권 머지 (Tasty Travels↑ Mystery Town신규↑)','북미 Word (Solitaire신규↑ NYT↑)'],
+  [-47,-81,-544,-157,-72,-135,-102,135,95,67],null,330,'억',null,
+  [153,240,2597,1110,526,1727,1225,4631,975,69],
+  [105,158,2053,952,454,1592,1123,4765,1070,136]);
+
+mkLines('us_pubgenre_trend',[
+  {label:'기타 Puzzle',       data:[2870,3762,4196,4588,4911,4321,4660,4664,4983,4649]},
+  {label:'중화권 Strategy',   data:[1173,1140,1790,2570,2673,2548,2570,2443,1991,1725]},
+  {label:'북미 Board',        data:[362,1468,2614,2097,1981,1549,1650,1583,1654,1539]},
+  {label:'북미 Casino(PvE)',  data:[1491,1617,1558,1482,1282,1165,1227,1154,1128,1088]},
+  {label:'기타 Strategy',     data:[926,745,774,1280,1290,1048,990,913,989,955]},
+  {label:'중화권 머지',       data:[null,31,185,545,941,936,1048,1023,1108,1077]},
+  {label:'북미 Word',         data:[86,79,111,86,64,65,78,109,138,160]},
+  {label:'기타 Simulation',   data:[209,232,277,217,159,155,144,108,107,100]},
+  {label:'JP Action',         data:[269,277,269,214,249,298,173,115,201,160]},
+  {label:'기타 Casino(PvE)',  data:[1058,1070,1014,757,567,528,483,459,460,442]},
+]);
+
+mkHbar('us_game',
+  ['Clash Royale↓','Last War↓','MONOPOLY GO↓','Candy Crush Saga↓','Royal Match↑','Kingshot↑','Roblox↑','Invincible↑(4월신규,2개월)','Sword x Staff↑(6월신규,1개월)'],
+  [-43.1,-37.5,-6.3,-6.0,3.6,4.3,63.5,null,null],null,null,'%',
+  [-95.6,-421.9,-92.7,-52.4,39.5,26.4,100.4,91.7,164.8]);
+
+mkHbar('us_game_amt',
+  ['Clash Royale','Last War','MONOPOLY GO','Candy Crush Saga','Royal Match','Kingshot','Roblox','Invincible(4월신규,2개월)','Sword x Staff(6월신규,1개월)'],
+  [-95.6,-421.9,-92.7,-52.4,39.5,26.4,100.4,91.7,164.8],null,150,'억',null,
+  [222,1124,1483,876,1088,614,158,0,0],
+  [126,702,1390,823,1128,640,259,92,165]);
+
+mkLines('us_genre_trend',[
+  {label:'Puzzle',      data:[3087,3892,4321,4675,5004,4382,4727,4759,5075,4753]},
+  {label:'Strategy',    data:[2376,2093,2694,3932,4079,3662,3625,3413,3065,2743]},
+  {label:'Casino(PvE)', data:[2982,3088,2955,2619,2212,1975,2016,1909,1877,1800]},
+  {label:'Board',       data:[381,1566,2827,2245,2099,1672,1789,1669,1743,1662]},
+  {label:'머지',        data:[199,258,528,936,1344,1315,1459,1424,1528,1472]},
+  {label:'Word',        data:[86,79,111,86,64,65,78,109,138,160]},
+]);
+
+mkLines('us_game_trend',[
+  {label:'MONOPOLY GO',      data:[null,1680,2267,1793,1705,1305,1438,1378,1446,1346]},
+  {label:'Royal Match',      data:[430,950,1352,1227,1201,1025,1038,1090,1178,1115]},
+  {label:'Candy Crush Saga', data:[896,1012,970,946,951,766,910,836,886,748]},
+  {label:'Last War',         data:[null,null,630,1106,1169,1097,1105,1018,588,499]},
+  {label:'Clash Royale',     data:[161,117,159,435,306,195,164,139,125,115]},
+  {label:'Kingshot',         data:[null,null,null,491,642,596,603,641,685,594]},
+  {label:'Roblox',           data:[739,903,1151,422,144,122,208,210,247,319]},
+  {label:'Invincible',       data:[null,null,null,null,null,null,null,86,97,null]},
+  {label:'Sword x Staff',    data:[null,null,null,null,null,null,null,null,null,165]},
+]);
+
+/* ── ⑥ KR 자국 퍼블리셔 추이 ── */
+mkLines('kr_pub_trend',[
+  {label:'NEXON',    color:'#1d4ed8', data:[484,451,253,473,900,709,669,435,454,427]},
+  {label:'NC',       color:'#dc2626', data:[973,767,729,603,323,296,324,330,338,288]},
+  {label:'Netmarble',color:'#f97316', data:[214,197,214,463,128,129,248,211,161,319]},
+  {label:'NHN',      color:'#16a34a', data:[86,112,123,129,117,140,147,154,176,151]},
+  {label:'Kakao',    color:'#ca8a04', data:[365,430,290,175,97,102,80,78,68,158]},
+  {label:'Com2uS',   color:'#0891b2', data:[57,77,102,79,72,73,81,95,106,81]},
+  {label:'111%',     color:'#7c3aed', data:[12,null,105,67,65,65,72,88,101,99]},
+  {label:'KRAFTON',  color:'#92400e', data:[31,31,35,38,39,43,38,35,31,29]},
+]);
+mkHbar('kr_pub_game',
+  ['StoneAge Idle↓ (Netmarble,3월~)','FC모바일↓ (NEXON)','MapleStory Idle↓ (NEXON)','AION2↓ (NC)','PUBG MOBILE↓ (KRAFTON)','마비노기모바일↓ (NEXON)','오딘: 발할라 라이징↑ (Kakao)','한게임 포커↑ (NHN)','리니지M↑ (NC)','컴투스프야V26↑ (Com2uS)','Lucky Defense↑ (111%)','우마무스메↑ (Kakao,5월결측·2개월평균)','SOL:enchant↑ (Netmarble,6월신규)'],
+  [-83.8,-53.3,-49.2,-43.3,-20.2,-17.2,10.3,13.3,16.1,26.7,42.9,130.0,null],null,null,'%',
+  [-124.6,-46.9,-239.3,-25.7,-8.0,-13.5,7.5,5.9,33.3,12.3,28.9,13.0,204.8]);
+
+mkHbar('kr_pub_game_amt',
+  ['StoneAge Idle↓ (Netmarble,3월~)','FC모바일↓ (NEXON)','MapleStory Idle↓ (NEXON)','AION2↓ (NC)','PUBG MOBILE↓ (KRAFTON)','마비노기모바일↓ (NEXON)','오딘: 발할라 라이징↑ (Kakao)','한게임 포커↑ (NHN)','리니지M↑ (NC)','컴투스프야V26↑ (Com2uS)','Lucky Defense↑ (111%)','우마무스메↑ (Kakao,5월결측·2개월평균)','SOL:enchant↑ (Netmarble,6월신규)'],
+  [-124.6,-46.9,-239.3,-25.7,-8.0,-13.5,7.5,5.9,33.3,12.3,28.9,13.0,204.8],null,180,'억',null,
+  [149.0,88.0,486.6,59.4,39.8,78.7,73.1,44.3,206.7,46.1,67.3,10.0,null],
+  [23.7,41.1,247.4,33.7,31.7,65.2,80.6,50.2,240.0,58.3,96.2,23.0,204.8]);
+
+/* ── ⑥ JP 자국 퍼블리셔 추이 ── */
+mkLines('jp_pub_trend',[
+  {label:'Bandai Namco', color:'#1d4ed8', data:[702,645,695,850,970,864,612,745,826,508]},
+  {label:'KONAMI',       color:'#dc2626', data:[655,713,609,542,632,362,737,612,561,712]},
+  {label:'Cygames',      color:'#f97316', data:[863,562,408,390,326,368,667,197,256,211]},
+  {label:'Aniplex',      color:'#ec4899', data:[634,543,447,519,597,238,267,205,226,226]},
+  {label:'GungHo',       color:'#16a34a', data:[407,306,280,206,236,294,238,239,203,271]},
+  {label:'SQUARE ENIX',  color:'#7c3aed', data:[672,577,430,264,254,100,187,255,377,230]},
+  {label:'NHN PlayArt',  color:'#0891b2', data:[42,35,47,62,47,27,24,97,106,28]},
+]);
+mkHbar('jp_pub_game',
+  ['드래곤볼Z 닷칸↓ (Bandai Namco)','우마무스메↓ (Cygames)','ONE PIECE 바운티↓ (Bandai Namco)','프야스A↓ (KONAMI)','FGO↓ (Aniplex)','퍼즐앤드래곤즈↓ (GungHo)','DQ워크↑ (SQUARE ENIX)','SD건담↑ (Bandai Namco)','eFootball↑ (KONAMI)','학원아이마스↑ (Bandai Namco)','#컴퍼스↑ (NHN PlayArt)','DQスマッシュグロウ↑신규 (SQUARE ENIX)','파워프로어드벤처즈↑신규 (KONAMI)'],
+  [-72.9,-56.8,-45.2,-40.4,-35.7,-7.4,13.8,19.8,62.4,83.7,135.0,null,null],null,null,'%',
+  [-162.8,-191.5,-69.3,-117.0,-91.0,-18.9,15.9,35.4,142.1,72.1,44.1,98.1,48.9]);
+
+mkHbar('jp_pub_game_amt',
+  ['드래곤볼Z 닷칸↓ (Bandai Namco)','우마무스메↓ (Cygames)','ONE PIECE 바운티↓ (Bandai Namco)','프야스A↓ (KONAMI)','FGO↓ (Aniplex)','퍼즐앤드래곤즈↓ (GungHo)','DQ워크↑ (SQUARE ENIX)','SD건담↑ (Bandai Namco)','eFootball↑ (KONAMI)','학원아이마스↑ (Bandai Namco)','#컴퍼스↑ (NHN PlayArt)','DQスマッシュグロウ↑신규 (SQUARE ENIX)','파워프로어드벤처즈↑신규 (KONAMI)'],
+  [-162.8,-191.5,-69.3,-117.0,-91.0,-18.9,15.9,35.4,142.1,72.1,44.1,98.1,48.9],null,210,'억',null,
+  [223,337,153,290,255,256,115,179,228,86,33,null,null],
+  [60,145,84,173,164,237,131,214,370,158,77,98,49]);
+
+/* ── ⑥ US 자국 퍼블리셔 추이 ── */
+mkLines('us_pub_trend',[
+  {label:'Scopely',      color:'#1d4ed8', data:[473,1444,2512,1920,1763,1356,1438,1378,1446,1346]},
+  {label:'Niantic',      color:'#dc2626', data:[392,431,424,406,265,434,480,301,300,315]},
+  {label:'Roblox',       color:'#f97316', data:[739,903,1151,422,144,122,208,210,247,319]},
+  {label:'Activision',   color:'#16a34a', data:[364,365,299,312,269,279,237,231,262,252]},
+  {label:'EA',           color:'#ca8a04', data:[226,245,237,219,219,208,183,182,246,252]},
+  {label:'SciPlay',      color:'#0891b2', data:[172,221,215,191,191,170,191,153,148,151]},
+  {label:'Playtika',     color:'#7c3aed', data:[278,268,268,223,169,142,159,154,153,143]},
+  {label:'DoubleDown',   color:'#92400e', data:[225,217,203,205,146,122,121,114,117,89]},
+  {label:'NYT Games',    color:'#84cc16', data:[null,40,51,69,64,65,78,69,74,91]},
+]);
+mkHbar('us_pub_game',
+  ['포켓몬GO↓ (Niantic)','DoubleDown Casino↓ (DoubleDown)','MONOPOLY GO↓ (Scopely)','Jackpot Party↓ (SciPlay)','CoD Mobile↓ (Activision)','Bingo Blitz↓ (Playtika)','NYT Games↑ (NYT)','EA FC Soccer↑ (EA)','Roblox↑ (Roblox)'],
+  [-22.3,-17.1,-6.3,-5.9,-5.3,-4.3,13.4,21.9,63.5],null,null,'%',
+  [-87.7,-22.0,-92.7,-5.6,-13.8,-6.8,9.3,14.1,100.4]);
+
+mkHbar('us_pub_game_amt',
+  ['포켓몬GO↓ (Niantic)','DoubleDown Casino↓ (DoubleDown)','MONOPOLY GO↓ (Scopely)','Jackpot Party↓ (SciPlay)','CoD Mobile↓ (Activision)','Bingo Blitz↓ (Playtika)','NYT Games↑ (NYT)','EA FC Soccer↑ (EA)','Roblox↑ (Roblox)'],
+  [-87.7,-22.0,-92.7,-5.6,-13.8,-6.8,9.3,14.1,100.4],null,180,'억',null,
+  [393,129,1483,95,262,157,69,64,158],
+  [305,107,1390,90,248,150,78,78,259]);
+</script>
+</body>
+</html>
