@@ -17,6 +17,11 @@ seneor/
 ├── 26Y1Q/          분기별 산출물 — 폴더 하나 = 분기 하나
 ├── 26Y2Q/          index.html(본편) · summary.html(요약본)
 │
+├── CLAUDE.md       작업 규칙 요약 (고치기 전에 읽을 것)
+├── docs/
+│   └── QUARTERLY.md    ★ 분기 보고서 작업 가이드
+├── report_pipeline/    기간 연장 재생성 (config 단일출처 + 자기정합 검증기)
+│
 ├── src/            재사용 라이브러리 (API 클라이언트·설정)
 ├── collect/        Sensor Tower API 수집
 ├── build/          보고서·슬라이드 생성
@@ -38,6 +43,13 @@ seneor/
 ---
 
 ## 새 분기를 추가할 때
+
+새 분기는 **새로 만드는 게 아니라 기간을 연장하는 것**입니다. 프레임은 그대로 두고
+`report_pipeline/config.py` 의 PERIOD 블록만 바꿔 데이터를 재산출합니다.
+집계 기준·검증 절차·자주 나는 실수는 **[docs/QUARTERLY.md](docs/QUARTERLY.md)** 에 있습니다.
+**작업 전에 반드시 읽으세요.**
+
+발행 단계는 다음 4가지입니다.
 
 1. `26Y3Q/` 폴더에 본편 `index.html`, 요약본 `summary.html` 을 넣습니다.
 2. 각 `<title>` 을 `26년 3분기 시장 분석 보고서 — NHN 모바일 게임 시장 분석` 형식으로 맞춥니다.
@@ -74,9 +86,10 @@ cp .env.example .env     # 값을 채운 뒤 사용
 `AI_MOBILEGAME_DSN`(PostgreSQL 접속 문자열) 두 개를 넣으세요. `.env` 는 커밋되지 않습니다.
 
 ```bash
-python collect/collect_all_v2.py     # API 수집
-python build/build_exec_report.py    # 보고서 생성
-python verify/verify_all_sum.py      # 집계 검증
+python collect/collect_all_v2.py       # API 수집
+python build/build_exec_report.py      # 보고서 생성
+python verify/verify_all_sum.py        # 집계 검증 (개별 쿼리)
+python -m report_pipeline.validate     # HTML 자기정합성 — 발행 전 필수, ✅ 0건까지
 ```
 
 스크립트는 저장소 루트에서 실행하는 것을 전제로 합니다.
