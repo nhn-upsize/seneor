@@ -7,11 +7,12 @@ conn = psycopg2.connect(os.environ["AI_MOBILEGAME_DSN"])
 cur = conn.cursor()
 
 # 중화권 국가 정의
-CN_COUNTRIES = "('China','Hong Kong','Taiwan','Singapore')"
+CN_COUNTRIES = "('China','Hong Kong','Taiwan','Macao','Macau')"
 
+# 강제분류: NEXON→KR, FUNFLY→중화권. 그 외 싱가포르 퍼블리셔는 '기타'(중화권 아님).
 for pub_group, cond in [
     ('KR 퍼블', f"(publisher_country='South Korea' OR publisher_name ILIKE '%NEXON%')"),
-    ('중화권',  f"publisher_country IN {CN_COUNTRIES}"),
+    ('중화권',  f"(publisher_country IN {CN_COUNTRIES} OR publisher_name ILIKE '%FUNFLY%')"),
 ]:
     print(f"\n=== {pub_group} · 연도별 신규 진입 수 (장르별) ===")
     # 연도별 첫 진입월 기준

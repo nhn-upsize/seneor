@@ -27,7 +27,8 @@ seneor/
 ├── build/          보고서·슬라이드 생성
 ├── verify/         집계 검증 쿼리 (분기마다 재실행)
 │
-├── queries/ · genre_trend_package_20260423/    분석용 SQL
+├── queries/        쿼리 지도 · generated/(자동생성 SQL) · adhoc/
+├── genre_trend_package_20260423/    장르 추이 SQL
 └── sensor_skill/ · dart_skill/                 DB 조회 스킬 정의
 ```
 

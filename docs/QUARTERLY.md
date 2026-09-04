@@ -103,8 +103,19 @@ POST    = {"full_years": [2025], "include_partial": True, "months": 18}
 
 ### 2-2. 데이터 재산출
 
-`report_pipeline/queries.py` 의 `all_queries()` 가 config 기준으로 13개 섹션 SQL을 만들어 줍니다.
+```bash
+python -m report_pipeline.dump_sql
+```
+
+→ `queries/generated/<기간>/` 에 13개 섹션 SQL이 파일로 떨어집니다.
 이걸 DB에 돌려 값을 얻고 HTML을 갱신합니다. **수기 추정이나 눈대중 금지.**
+
+`generated/` 안의 파일은 손으로 고치지 마세요 — 다음 덤프 때 덮어써집니다.
+쿼리 로직을 바꿔야 하면 `report_pipeline/queries.py` 를 고칩니다.
+
+**파이프라인이 커버하지 않는 섹션** (⑤대표게임·웹보드·신규진입·중화권 침투표)은
+아직 수동입니다. `verify/` 스크립트에 SQL이 들어 있고 **기간이 하드코딩**돼 있으니
+분기를 추가해서 실행하세요. 자세한 지도는 [`queries/README.md`](../queries/README.md).
 
 ### 2-3. 발행
 

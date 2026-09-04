@@ -8,14 +8,15 @@ cur = conn.cursor()
 
 YR_MONTHS = {'2022':12,'2023':12,'2024':12,'2025':12,'26.1Q':3}
 
-CN = "('China','Hong Kong','Taiwan','Singapore')"
+CN = "('China','Hong Kong','Taiwan','Macao','Macau')"
 NA = "('United States','Canada')"
 
+# 강제분류: NEXON→KR, FUNFLY→중화권. 그 외 싱가포르 퍼블리셔는 '기타'(중화권 아님).
 groups = [
     ('KR 퍼블', f"(publisher_country='South Korea' OR publisher_name ILIKE '%NEXON%')"),
-    ('중화권',  f"publisher_country IN {CN} AND publisher_name NOT ILIKE '%NEXON%'"),
+    ('중화권',  f"(publisher_country IN {CN} OR publisher_name ILIKE '%FUNFLY%') AND publisher_name NOT ILIKE '%NEXON%'"),
     ('북미',    f"publisher_country IN {NA}"),
-    ('기타',    f"publisher_country IS NOT NULL AND publisher_country NOT IN {CN} AND publisher_country NOT IN {NA} AND publisher_country!='South Korea' AND publisher_name NOT ILIKE '%NEXON%'"),
+    ('기타',    f"publisher_country IS NOT NULL AND publisher_country NOT IN {CN} AND publisher_country NOT IN {NA} AND publisher_country!='South Korea' AND publisher_name NOT ILIKE '%NEXON%' AND publisher_name NOT ILIKE '%FUNFLY%'"),
 ]
 
 print(f"\n{'구분':<10}" + ''.join(f"{y:>10}" for y in YR_MONTHS))

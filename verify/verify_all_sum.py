@@ -51,7 +51,7 @@ for label, d in [('매출', rev), ('MAU', mau), ('ARPMAU', arp), ('DL', dl)]:
 
 # 2. 퍼블국적별 매출 (3국 합산)
 print("\n=== 3국 합산 퍼블국적별 매출 (억) ===")
-CN = "('China','Hong Kong','Taiwan','Macao','Macau','Singapore')"
+CN = "('China','Hong Kong','Taiwan','Macao','Macau')"
 groups = [
     ('KR',    "(publisher_country='South Korea' OR publisher_name ILIKE '%NEXON%') AND publisher_name NOT ILIKE '%FUNFLY%'"),
     ('JP',    "publisher_country='Japan' AND publisher_name NOT ILIKE '%NEXON%' AND publisher_name NOT ILIKE '%FUNFLY%'"),

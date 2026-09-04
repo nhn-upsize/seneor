@@ -67,7 +67,7 @@ b,a,d,p = ba(dl)
 print(f"  전후: {b:,.0f} -> {a:,.0f} ({d:+,.0f}, {p:+.1f}%)")
 
 print("\n=== US 퍼블국적별 (억) ===")
-CN = "('China','Hong Kong','Taiwan','Macao','Macau','Singapore')"
+CN = "('China','Hong Kong','Taiwan','Macao','Macau')"
 groups = [
     ('북미',  f"publisher_country IN ('United States','Canada') AND publisher_name NOT ILIKE '%NEXON%'"),
     ('중화권', f"(publisher_country IN {CN} OR publisher_name ILIKE '%FUNFLY%') AND publisher_name NOT ILIKE '%NEXON%'"),

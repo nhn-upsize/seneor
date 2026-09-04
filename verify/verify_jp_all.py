@@ -72,7 +72,7 @@ print(f"  전후: {b:,.0f} → {a:,.0f} ({d:+,.0f}만, {p:+.1f}%)")
 
 # 5. 퍼블국적별 매출
 print("\n=== JP 퍼블국적별 월평균 매출 (억) ===")
-CN = "('China','Hong Kong','Taiwan','Macao','Macau','Singapore')"
+CN = "('China','Hong Kong','Taiwan','Macao','Macau')"
 groups = [
     ('JP',   f"publisher_country='Japan' AND publisher_name NOT ILIKE '%NEXON%' AND publisher_name NOT ILIKE '%FUNFLY%'"),
     ('중화권', f"(publisher_country IN {CN} OR publisher_name ILIKE '%FUNFLY%') AND publisher_name NOT ILIKE '%NEXON%'"),
