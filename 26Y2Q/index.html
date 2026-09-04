@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>26년 1Q vs 2Q 분기별 분석 대시보드</title>
+<title>26년 2분기 시장 분석 보고서 — NHN 모바일 게임 시장 분석</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
 
@@ -6125,6 +6125,14 @@ function switchNgInnerOS(btn, groupId, os) {
   if (target) target.classList.add('active');
 }
 
+
+// URL 해시로 탭 바로 열기 (예: index.html#tab-newgame)
+(function () {
+  var id = location.hash.slice(1);
+  if (id && document.getElementById(id) && document.querySelector('[data-tab="' + id + '"]')) {
+    switchTab(id);
+  }
+})();
 </script>
 </body>
 </html>

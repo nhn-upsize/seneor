@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NHN 모바일 게임 시장 분석</title>
+<style>
+  :root {
+    --bg: #f6f8fa;
+    --card: #ffffff;
+    --ink: #1e293b;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --accent: #0085ca;
+    --accent-soft: #e6f4fb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 "Malgun Gothic", "맑은 고딕", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 56px 24px 80px; }
+
+  header { border-bottom: 2px solid var(--ink); padding-bottom: 20px; margin-bottom: 40px; }
+  .eyebrow {
+    font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin: 0 0 8px;
+  }
+  h1 { font-size: 27px; margin: 0 0 10px; letter-spacing: -.02em; }
+  .lede { margin: 0; color: var(--muted); font-size: 14px; }
+
+  h2 {
+    font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 14px; font-weight: 700;
+  }
+
+  .quarter {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 22px 24px; margin-bottom: 16px;
+  }
+  .quarter-head {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .quarter-label { font-size: 19px; font-weight: 700; letter-spacing: -.01em; }
+  .badge {
+    font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 99px;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .quarter-period { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
+
+  ul.docs { list-style: none; margin: 0; padding: 0; }
+  ul.docs li { border-top: 1px solid var(--line); }
+  ul.docs a {
+    display: block; padding: 12px 0; text-decoration: none; color: inherit;
+  }
+  ul.docs a:hover .doc-title { color: var(--accent); text-decoration: underline; }
+  .doc-title { font-size: 15px; font-weight: 600; }
+  .doc-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .doc-span {
+    color: var(--ink); font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .note {
+    margin-top: 40px; padding: 18px 20px; border-left: 3px solid var(--line);
+    font-size: 13px; color: var(--muted);
+  }
+  .note strong { color: var(--ink); }
+  .note code {
+    background: #eef2f6; padding: 1px 5px; border-radius: 3px;
+    font-size: 12px; font-family: ui-monospace, "Consolas", monospace;
+  }
+  footer {
+    margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: 12px; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">NHN · Sensor Tower Market Analysis</p>
+    <h1>NHN 모바일 게임 시장 분석</h1>
+    <p class="lede">KR · JP · US 3개국 모바일 게임 시장. 분기마다 폴더 단위로 발행합니다.</p>
+  </header>
+
+  <h2>분기별 보고서</h2>
+
+  <div class="quarter">
+    <div class="quarter-head">
+      <span class="quarter-label">26년 2분기</span>
+      <span class="badge">최신</span>
+    </div>
+    <p class="quarter-period">2026년 7월 발행 · 26년 2분기 데이터 신규 반영</p>
+    <ul class="docs">
+      <li><a href="26Y2Q/index.html">
+        <div class="doc-title">26년 2분기 시장 분석 보고서</div>
+        <div class="doc-desc"><span class="doc-span">집계 2022-01 ~ 2026-06</span> · 국가별 시장 · KR 웹보드 · 신규 진입 게임 · 데이터 기준 (4개 탭)</div>
+      </a></li>
+      <li><a href="26Y2Q/summary.html">
+        <div class="doc-title">26년 2분기 요약본</div>
+        <div class="doc-desc"><span class="doc-span">집계 2026-01 ~ 2026-06</span> · 1분기 → 2분기 흐름 한 장 요약 — 보고용</div>
+      </a></li>
+    </ul>
+  </div>
+
+  <div class="quarter">
+    <div class="quarter-head">
+      <span class="quarter-label">26년 1분기</span>
+    </div>
+    <p class="quarter-period">2026년 4월 발행 · 4년 추이 기반 최초 발행</p>
+    <ul class="docs">
+      <li><a href="26Y1Q/index.html">
+        <div class="doc-title">26년 1분기 시장 분석 보고서</div>
+        <div class="doc-desc"><span class="doc-span">집계 2022-01 ~ 2026-03</span> · 국가별 시장 · KR 웹보드 · 신규 진입 게임 · 데이터 기준 (4개 탭)</div>
+      </a></li>
+    </ul>
+  </div>
+
+  <div class="note">
+    <strong>분기 추가 규칙</strong><br>
+    폴더는 <code>26Y3Q/</code> 형식, 그 안에 본편은 <code>index.html</code>,
+    요약본은 <code>summary.html</code> 로 둡니다. 문서 이름은
+    <code>26년 3분기 시장 분석 보고서</code> · <code>26년 3분기 요약본</code> 형식으로 고정합니다.
+    <b>루트 <code>index.html</code> 의 리다이렉트 경로를 새 분기로 바꾸는 것</b>과
+    이 목록에 블록을 추가하는 것을 잊지 마세요.
+    전체 용어 규칙은 저장소 <code>README.md</code> 참조.
+  </div>
+
+  <div class="note">
+    <strong>주소 안내</strong><br>
+    <code>/seneor/</code> 는 <b>항상 최신 분기 보고서</b>로 이동합니다.
+    이 목록 페이지 주소는 <code>/seneor/reports.html</code> 이고, 분기가 늘어도 바뀌지 않습니다.
+    특정 분기를 고정 링크로 공유할 때는 <code>/seneor/26Y2Q/</code> 처럼 분기 주소를 쓰세요.
+  </div>
+
+  <footer>
+    데이터 출처 Sensor Tower API · DART 공시 · 문의 NHN UPSIZE
+  </footer>
+
+</div>
+</body>
+</html>

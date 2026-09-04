@@ -1,150 +1,122 @@
-# NHN 모바일 게임 신규 출시 검토 — 시장 분석 프로젝트
+# NHN 모바일 게임 시장 분석
 
-## 프로젝트 개요
+KR·JP·US 3개국 모바일 게임 시장을 **분기 단위로 분석·발행**하는 저장소입니다.
+Board/Casino/Card 외 신규 장르 출시 및 해외 진출 검토가 목적입니다.
 
-| 항목 | 내용 |
-|---|---|
-| **목적** | NHN의 Board/Casino/Card 외 신규 장르 출시 및 해외(US) 진출 검토를 위한 데이터 기반 시장 분석 |
-| **분석 기간** | 2022-01 ~ 2026-02 (약 4년 2개월) |
-| **대상 시장** | KR (한국), JP (일본), US (미국) |
-| **데이터 소스** | Sensor Tower API + DART 공시 (한국 게임사 30개) |
-| **DB** | PostgreSQL `AI_mobilegame` (10.77.13.162:5432) |
-| **작성일** | 2026-04-14 ~ 15 |
+보고서는 GitHub Pages로 발행되며, **전달할 링크는 이 문서가 아니라 메신저로 공유합니다.**
+여기에는 발행·유지보수 규칙만 둡니다.
 
 ---
 
-## 최종 산출물
-
-### 보고용 (이사님 전달)
-
-| 파일 | 설명 |
-|---|---|
-| **`NHN_market_analysis.html`** | **통합 보고서 (파일 1개)** — 3개 탭으로 구성, 브라우저에서 바로 열림, DB 불필요 |
-
-탭 구성:
-1. **한국 시장 인사이트** — 시장 변화 요약, 4년 추이, 성장/하락 영역, NHN 전략 방향
-2. **A~G 분석 트리 & 결과** — 7단계 분석 프레임워크 + 아코디언 형태 분석 결과
-3. **데이터 기준 명세** — 테이블별 기준, 집계 방식, 주의사항
-
-### 내부 보관용
-
-| 파일 | 설명 |
-|---|---|
-| `analysis_queries.sql` | A~G 전체 쿼리 30개 (DB 재실행용) |
-| `analysis_results.json` | 전체 결과 데이터 JSON (DB 없이 데이터 확인용) |
-| `market_research_mindmap.html` | 메인 분석 (통합 전 개별 파일) |
-| `kr_market_insight.html` | 한국 시장 인사이트 (통합 전 개별 파일) |
-| `data_criteria.html` | 데이터 기준 명세 (통합 전 개별 파일) |
-| `layout_sample.html` | 레이아웃 비교 샘플 (탭 vs 아코디언) |
-
----
-
-## 분석 프레임워크 (A~G 7단계)
+## 저장소 구조
 
 ```
-A. 시장 전체 흐름 → B. 수익 구조 → C. 유저 프로필 → D. 경쟁 환경
-    → E. 출시 조건 → F. 출시 후 생존 → G. 재무 역량 (DART)
+seneor/
+├── index.html      최신 분기로 보내는 리다이렉트 (Pages 랜딩)
+├── reports.html    전체 분기 목록
+├── 26Y1Q/          분기별 산출물 — 폴더 하나 = 분기 하나
+├── 26Y2Q/          index.html(본편) · summary.html(요약본)
+│
+├── src/            재사용 라이브러리 (API 클라이언트·설정)
+├── collect/        Sensor Tower API 수집
+├── build/          보고서·슬라이드 생성
+├── verify/         집계 검증 쿼리 (분기마다 재실행)
+│
+├── queries/ · genre_trend_package_20260423/    분석용 SQL
+└── sensor_skill/ · dart_skill/                 DB 조회 스킬 정의
 ```
 
-| 단계 | 질문 | 핵심 결론 |
+| 주소 | 가리키는 곳 |
+|---|---|
+| `/seneor/` | 최신 분기 보고서. **분기마다 대상이 바뀝니다** |
+| `/seneor/reports.html` | 전체 분기 목록. 주소 고정 |
+| `/seneor/26Y2Q/` | 특정 분기 고정 주소 |
+
+**밖으로 링크를 공유할 때는 `/26Y2Q/` 형식을 쓰세요.** 루트는 다음 분기가 나오면 대상이 바뀝니다.
+`#tab-country-deep` · `#tab-webboard` · `#tab-newgame` · `#tab-criteria` 를 붙이면 특정 탭이 바로 열립니다.
+
+---
+
+## 새 분기를 추가할 때
+
+1. `26Y3Q/` 폴더에 본편 `index.html`, 요약본 `summary.html` 을 넣습니다.
+2. 각 `<title>` 을 `26년 3분기 시장 분석 보고서 — NHN 모바일 게임 시장 분석` 형식으로 맞춥니다.
+3. **루트 `index.html` 의 리다이렉트 경로 두 줄**(`meta refresh` · `link rel=canonical`)을
+   새 폴더로 바꿉니다. ← **빼먹으면 루트가 계속 이전 분기를 가리킵니다.**
+4. `reports.html` 맨 위에 분기 블록을 추가하고 `최신` 배지를 옮깁니다.
+
+옮기거나 이름을 바꿀 때, 밖에 공유된 적 있는 주소는 리다이렉트 stub으로 남깁니다.
+현재 1개 — `26Y2Q/26Q2_market_summary.html` → `summary.html`.
+
+### 용어 규칙
+
+이름이 갈라지지 않도록 **아래 표기만** 사용합니다.
+
+| 대상 | 표기 | 쓰지 않는 표현 |
 |---|---|---|
-| **A** | 시장이 어디로 가고 있나? | KR +14% 유일 성장, JP -15% 하락, US $12B 압도적 |
-| **B** | 어디에 돈이 되는가? | KR RPG 44% 편중, US Casino+Card+Board $2.8B |
-| **C** | 유저는 누구인가? | Board/Casino/Card 55+ 고연령, Puzzle 95% 여성 |
-| **D** | 경쟁 상황은? | KR 퍼블 66%→50%, 중화권 22%→30% 상승 |
-| **E** | 성공하려면? | Puzzle 6M생존 77% 최고, US iOS TOP100 월 $1.5M |
-| **F** | 출시 후 생존은? | Casino US 38.4개월 최장수, RPG 8.6개월 최단 |
-| **G** | 재무 체력은? | NHN 현금 1.56조 1위, 넷마블 광고비 20% vs NHN 3.5% |
+| 분기 — 폴더·파일 | `26Y2Q` | `26Q2`, `2026Q2` |
+| 분기 — 화면·문서명 | `26년 2분기` | `2Q`, `1Q vs 2Q`, `26년 상반기` |
+| 문서① 4탭 본편 | `26년 2분기 시장 분석 보고서` | 종합, 대시보드 |
+| 문서② 1장 요약 | `26년 2분기 요약본` | 요약, 흐름 분석 |
+
+파일명은 문서 종류만 나타냅니다(`index.html` / `summary.html`). 분기는 폴더가, 버전은 git이 관리합니다.
 
 ---
 
-## 주요 데이터 테이블
+## 실행 환경
 
-| 테이블 | 용도 | Grain |
-|---|---|---|
-| `dw_app_monthly` | DW 통합 (매출+DL+MAU+UA+앱메타) | 월 × OS × 국가 × 앱 |
-| `st_top_publishers` | 퍼블리셔 매출/DL TOP100 | 월 × OS × 국가 × 퍼블리셔 |
-| `st_app_profile` | 앱 프로필 (성별/연령/리텐션 등) | 수집일 × OS × 앱 |
-| `st_store_summary` | 스토어 전체 매출 (Android만) | 월 × OS × 국가 |
-| `dart_financial_summary` | 한국 게임사 연간 재무 | 회사 × 회계유형 × 연도 |
-| `dart_new_game` | 한국 게임사 신작 | 회사 × 게임 |
-| `dart_disclosure` | 한국 게임사 공시 | 회사 × 공시 |
-
----
-
-## 데이터 제약사항
-
-| 제약 | 영향 |
-|---|---|
-| 성별/연령 = **WW(글로벌) 기준만** | 국가별 분리 불가. Asia 56%, 북미 25%, 유럽 15% |
-| 성별/연령 = **스냅샷 1회분** | 시계열 변화 추적 불가 |
-| st_store_summary = **Android만** | iOS HHI 산출 불가 |
-| NEXON = JP 등록 | **KR 퍼블리셔로 강제 분류**하여 집계 |
-| DART 재무 = **연결재무** | 게임 외 사업 매출 포함 (NHN 결제/클라우드 등) |
-| 분석 제외 태그 8개 | 여성시장추이, 유저고령화, R&D투자, 인당매출 등 |
-
----
-
-## 퍼블리셔 분류 기준
-
-### 국적 5개 그룹
-| 그룹 | 포함 국가 |
-|---|---|
-| KR | South Korea + NEXON(JP 등록이지만 KR 강제) |
-| JP | Japan |
-| 중화권 | China, Hong Kong, Taiwan, Macao |
-| 북미 | US, USA, United States, Canada |
-| 기타 | 나머지 전부 |
-
-### 경쟁사 분석 대상 (D2)
-Supercell, NEXON, Cygames, Netmarble, Level Infinite, Kakao Games, SQUARE ENIX, NHN Corp., NCSOFT, Habby, NHN PlayArt, Com2uS, KRAFTON, Wemade 등 16개사
-
-### DART 재무 분석 대상 (G)
-NHN, 넥슨, 넷마블, 크래프톤, 카카오게임즈, 엔씨소프트, 컴투스 (7개사)
-
----
-
-## 핵심 결론: NHN 전략 방향
-
-1. **Puzzle 최우선 확장** — KR 4년 +257%, 장수(JP 27.6개월), 유저 유사(35+). 이미 3개 개발 중
-2. **US Card/Board 진출** — NHN 핵심 역량의 US 시장 $2.8B (KR의 17배)
-3. **Strategy 검토** — 3국 최고 성장(KR +261%). 중화권 경쟁 치열
-4. **오가닉/IP 강화** — NHN Paid 28.5%, Casino/Card 오가닉 63% 활용
-5. **현금 1.56조 활용** — 7개사 중 현금 1위
-
----
-
-## 프로젝트 히스토리
-
-| 날짜 | 작업 |
-|---|---|
-| 2026-04-14 | 분석 프레임워크 설계 (A~G 7단계), HTML 트리 생성 |
-| 2026-04-14 | DB 쿼리 추출 (30개), dw_app_monthly + DART 테이블 |
-| 2026-04-14 | 하단 분석 결과 카드 22개 생성, N/A 12개→8개 태그 처리 |
-| 2026-04-14 | kr_market_insight.html 생성 (한국 시장 인사이트) |
-| 2026-04-14 | data_criteria.html 생성 (데이터 기준 명세) |
-| 2026-04-14 | 아코디언 레이아웃으로 전면 재구성 |
-| 2026-04-14 | 연간 기준('22→'25) 통일, 4년 추이 바차트 추가 |
-| 2026-04-15 | 3개 HTML → NHN_market_analysis.html 탭 방식 통합 |
-
----
-
-## 재현 방법
-
-### HTML 보고서만 보는 경우
-`NHN_market_analysis.html`을 브라우저에서 열면 됨 (DB 불필요)
-
-### 데이터를 다시 뽑는 경우
 ```bash
-# 1. DB 접속
-psql -h 10.77.13.162 -U postgres -d AI_mobilegame
-
-# 2. 쿼리 실행
-\i analysis_queries.sql
-
-# 3. 또는 MCP postgres 연결
-claude mcp add postgres -- npx -y @modelcontextprotocol/server-postgres postgresql://postgres:upsize@10.77.13.162:5432/AI_mobilegame
+pip install -r requirements.txt
+cp .env.example .env     # 값을 채운 뒤 사용
 ```
 
-### 결과 데이터만 확인
-`analysis_results.json` 파일 참조 (A~G 섹션별 구조화된 JSON)
+접속 정보는 **코드에 넣지 않습니다.** `.env` 에 `SENSOR_TOWER_API_TOKEN` 과
+`AI_MOBILEGAME_DSN`(PostgreSQL 접속 문자열) 두 개를 넣으세요. `.env` 는 커밋되지 않습니다.
+
+```bash
+python collect/collect_all_v2.py     # API 수집
+python build/build_exec_report.py    # 보고서 생성
+python verify/verify_all_sum.py      # 집계 검증
+```
+
+스크립트는 저장소 루트에서 실행하는 것을 전제로 합니다.
+
+### 커밋하지 않는 것
+
+`.env` · `data/` `data_raw/` `output/` `reports/` `*.csv` `*.xlsx`(**Sensor Tower 라이선스 데이터**) ·
+`__pycache__/` `.cache/`. 발행할 HTML은 `reports/` 가 아니라 **분기 폴더에 직접** 넣어야 커밋됩니다.
+
+---
+
+## 분석 기준 (요약)
+
+**분석 프레임워크 A~G** — ⒜시장 흐름 ⒝수익 구조 ⒞유저 프로필 ⒟경쟁 환경 ⒠출시 조건
+⒡출시 후 생존 ⒢재무 역량(DART). 데이터는 Sensor Tower API + DART 공시(한국 게임사 30개),
+PostgreSQL `AI_mobilegame` 에 적재.
+
+**집계 표준**
+
+- 매출 TOP100 · OS 통합(`unified_os`) 기준, `dw_app_monthly` 중심
+- 퍼블리셔 국적 5그룹 — KR / JP / 중화권 / 북미 / 기타
+- **NEXON은 JP 등록이지만 KR로 강제 분류**
+- **중화권 = China·Hong Kong·Taiwan·Macao 만. 싱가포르 제외**
+- 매출은 `revenue_usd_100p`(스토어 수수료 포함 Gross), 환율은 연도별 평균 적용
+
+**주의**
+
+- 성별·연령은 **WW 기준 스냅샷 1회분** — 국가별 분리도, 시계열 추적도 불가
+- `st_store_summary` 는 **Android만** — iOS 점유율 산출 불가
+- DART 재무는 **연결재무** — 게임 외 사업 매출 포함(NHN 결제/클라우드 등)
+
+> 해당 분기의 정확한 집계 기준은 보고서 **④데이터 기준·집계 명세** 탭에 있습니다.
+> 이 요약과 다르면 **보고서 쪽이 맞습니다.**
+
+---
+
+## 히스토리
+
+| 시기 | 작업 |
+|---|---|
+| 2026-04 | 분석 프레임워크 설계(A~G), 26년 1분기 보고서 발행 |
+| 2026-07 | 26년 2분기 보고서·요약본 발행 |
+| 2026-09 | 분기 폴더 체계·용어 규칙 도입, 스크립트 정리, 인증 정보 환경변수 전환 |

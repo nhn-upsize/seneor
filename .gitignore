@@ -1,6 +1,7 @@
 # Credentials / env
 .env
 .env.*
+!.env.example
 
 # Cache / build
 .cache/
