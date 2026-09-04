@@ -108,6 +108,29 @@ python -m report_pipeline.extract_manual_sql
 
 ---
 
+### `manual/` 은 "2분기에 돌린 그대로"가 아닙니다 — 일부러 그렇습니다
+
+2분기 작업 시점의 verify 스크립트 5개는 **중화권에 싱가포르를 포함**하고 있었습니다
+(`verify_all_sum` · `verify_jp_all` · `verify_us_all` · `verify_kr_market_composition`
+· `verify_kr_newgame_genre`). 2026-09에 이걸 고친 뒤 추출했으므로, `manual/` 의 SQL은
+그 시점 원본과 다릅니다.
+
+**그 시점 쿼리를 보존하지 않은 이유** — 발행된 보고서를 재현하지 못하기 때문입니다.
+US 26년 2분기 중화권으로 실측 비교하면:
+
+| | 중화권 2Q 월평균 | 점유율 |
+|---|---|---|
+| 수정본 (FUNFLY만) | **3,988억** | **22.4%** |
+| 2분기 시점 (싱가포르 포함) | 5,120억 | 28.8% |
+
+발행 보고서에 적힌 값이 3,988억 / 22.4% 입니다. **보고서는 처음부터 맞았고 검증
+스크립트만 틀려 있었습니다.** 싱가포르 퍼블리셔(FUNFLY 제외) 26.1H 월평균은
+KR 146억 · JP 140억 · US 1,197억(전체의 6.6%)이라 무시할 수 없는 규모입니다.
+
+옛 버전이 필요하면 git 히스토리에 있습니다 — `git show f6deef9:scripts/verify_all_sum.py`.
+
+---
+
 ## 자주 어긋나는 기준
 
 - **중화권 = China · Hong Kong · Taiwan · Macao 만. 싱가포르는 절대 포함하지 않음**
