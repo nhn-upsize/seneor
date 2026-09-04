@@ -113,9 +113,11 @@ python -m report_pipeline.dump_sql
 `generated/` 안의 파일은 손으로 고치지 마세요 — 다음 덤프 때 덮어써집니다.
 쿼리 로직을 바꿔야 하면 `report_pipeline/queries.py` 를 고칩니다.
 
-**파이프라인이 커버하지 않는 섹션** (⑤대표게임·웹보드·신규진입·중화권 침투표)은
-아직 수동입니다. `verify/` 스크립트에 SQL이 들어 있고 **기간이 하드코딩**돼 있으니
-분기를 추가해서 실행하세요. 자세한 지도는 [`queries/README.md`](../queries/README.md).
+**파이프라인이 커버하지 않는 섹션** (시장총계 일부·퍼블리셔·장르·웹보드·신규진입)은
+아직 수동입니다. 실제로 쓴 SQL을 `queries/manual/` 에 섹션별로 뽑아뒀습니다(22개 파일).
+**기간이 쿼리 안에 하드코딩**돼 있으니 날짜를 직접 늘려야 합니다.
+정본은 `verify/*.py` 이고, 그걸 고쳤으면 `python -m report_pipeline.extract_manual_sql` 로
+사본을 다시 뽑으세요. 자세한 지도는 [`queries/README.md`](../queries/README.md).
 
 ### 2-3. 발행
 
