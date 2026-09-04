@@ -1,7 +1,7 @@
 """
 report_pipeline / validate.py
 =============================
-sensor_dashboard_work.html 의 **자기정합성(내부 일관성)을 전수 검사**한다.
+분기 보고서 HTML 의 **자기정합성(내부 일관성)을 전수 검사**한다.
 DB 불필요 — HTML만 읽어서 "안 바뀐 곳/서로 안 맞는 곳"을 리스트업.
 
 이번(2026-07) 세션에서 실제로 터진 버그류를 그대로 잡도록 설계:
@@ -9,7 +9,7 @@ DB 불필요 — HTML만 읽어서 "안 바뀐 곳/서로 안 맞는 곳"을 리
   [C2] 한눈에 카드의 전→후 == 해당국 Step2 합계의 전→후  (카드 미갱신 드리프트)
 
 사용:  python -m report_pipeline.validate [HTML경로]
-       (경로 생략 시 가장 최근 분기 폴더의 index.html — 26Y3Q 를 만들면 자동으로 그쪽을 검사)
+       (경로 생략 시: 저장소면 가장 최근 분기의 index.html, 로컬이면 sensor_dashboard_work.html)
 반환:  불일치 0건이면 exit 0, 있으면 목록 출력 후 exit 1
 """
 import re, sys
@@ -23,18 +23,27 @@ except Exception:
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
-def latest_quarter_html():
-    """가장 최근 분기 폴더(26Y1Q, 26Y2Q, …)의 index.html 경로."""
+def default_target():
+    """검사 대상 기본값.
+
+    1순위: 가장 최근 분기 폴더(26Y1Q, 26Y2Q, …)의 index.html  ← seneor 저장소
+    2순위: sensor_dashboard_work.html                        ← 로컬 작업 폴더
+    """
     dirs = sorted(
         (p for p in REPO_ROOT.glob("[0-9][0-9]Y[1-4]Q") if (p / "index.html").is_file()),
         key=lambda p: p.name,
     )
-    if not dirs:
-        raise SystemExit(
-            "분기 폴더를 찾지 못했습니다. 검사할 HTML 경로를 인자로 넘겨주세요.\n"
-            "  예) python -m report_pipeline.validate 26Y2Q/index.html"
-        )
-    return dirs[-1] / "index.html"
+    if dirs:
+        return dirs[-1] / "index.html"
+
+    legacy = REPO_ROOT / "sensor_dashboard_work.html"
+    if legacy.is_file():
+        return legacy
+
+    raise SystemExit(
+        "검사할 HTML을 찾지 못했습니다. 경로를 인자로 넘겨주세요.\n"
+        "  예) python -m report_pipeline.validate 26Y2Q/index.html"
+    )
 
 # 국가별 Step2 TOP5/기타 앵커. 메인 국적행은 "TOP5 행 바로 위 <tr>"로 잡아 모호성 제거.
 # (동명 국적행이 KR/JP/US/3국합산 탭에 중복 존재하므로 라벨 단독 앵커는 위험)
@@ -126,7 +135,7 @@ CHECKS = [check_step2_breakdown, check_cards_vs_totals]
 
 
 def run(html_path=None):
-    path = Path(html_path) if html_path else latest_quarter_html()
+    path = Path(html_path) if html_path else default_target()
     html = path.read_text(encoding="utf-8")
     all_issues = []
     for chk in CHECKS:
